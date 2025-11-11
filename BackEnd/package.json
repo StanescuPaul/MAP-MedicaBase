@@ -1,0 +1,30 @@
+{
+  "name": "react-web",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000M\u0000A\u0000P\u0000\r\u0000 \u0000",
+  "homepage": "https://github.com/StanescuPaul/MAP#readme",
+  "bugs": {
+    "url": "https://github.com/StanescuPaul/MAP/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StanescuPaul/MAP.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.0",
+    "@types/express": "^5.0.5",
+    "@types/node": "^24.10.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10",
+    "prisma": "^6.19.0"
+  }
+}

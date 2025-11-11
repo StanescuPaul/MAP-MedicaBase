@@ -10,30 +10,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Admin {
+model Doctor {
   id String @unique @default(uuid())
   name String
-  email String
-  password String
+  userName String @unique
+  password String @unique
   createAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   patients Patients[]
 
-  @@map("admins")
+  @@map("doctor")
 }
 
 model Patients {
   id String @unique @default(uuid())
   name String
-  cnp String
-  email String @unique
-  password String @unique
+  cnp String @unique
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
 
-  adminId String
-  admin Admin @relation(references: [id], fields: [adminId])
+  doctorId String
+  doctor Doctor @relation(references: [id], fields: [doctorId])
 
   alergies Alergies[]
 

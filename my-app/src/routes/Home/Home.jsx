@@ -4,12 +4,12 @@ import styles from "./Home.module.css";
 export function Home() {
   return (
     <div className={styles.container}>
-      <h1>Home</h1>
+      <h1>MedAllergyHub</h1>
       <div className={styles.buttonBody}>
         <Link to="/doctors/login">
-          <button className={styles.buttonStyle}>Login</button>
+          <button className={styles.buttonLoginStyle}>Login</button>
         </Link>
-        <button className={styles.buttonStyle}>Patients</button>
+        <button className={styles.buttonPatientStyle}>Patients</button>
       </div>
     </div>
   );

@@ -24,27 +24,33 @@ export function Login() {
   return (
     <div className={styles.container}>
       <div className={styles.loginBody}>
-        <h3>Login</h3>
-        <p className={styles.alertStyle}>{alert}</p>
-        <input
-          type="text"
-          placeholder="User name"
-          className={styles.usernameStyle}
-          value={userName}
-          onChange={(userName) => setUserName(userName.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className={styles.passwordStyle}
-          value={password}
-          onChange={(password) => setPassword(password.target.value)}
-        />
-        <button onClick={onLogin}>Login</button>
+        <div className={styles.topStyle}>
+          <h3 className={styles.loginText}>Login</h3>
+          <p className={styles.alertStyle}>{alert}</p>
+          <div className={styles.inpStyle}>
+            <input
+              type="text"
+              placeholder="User name"
+              className={styles.userInputStyle}
+              value={userName}
+              onChange={(userName) => setUserName(userName.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              className={styles.userInputStyle}
+              value={password}
+              onChange={(password) => setPassword(password.target.value)}
+            />
+            <button onClick={onLogin} className={styles.buttonStyle}>
+              Login
+            </button>
+          </div>
+        </div>
         <div className={styles.bottomStyle}>
-          <p>Create account</p>
+          <p className={styles.registerText}>Create account</p>
           <Link to="/doctors/register">
-            <button>Sign in</button>
+            <button className={styles.buttonStyle}>Sign in</button>
           </Link>
         </div>
       </div>

@@ -3,24 +3,25 @@
   height: 100vh;
   justify-content: center;
   align-items: center;
-}
-.usernameStyle {
-  width: 150px;
-  height: 20px;
-}
-.passwordStyle {
-  width: 150px;
-  height: 20px;
+  background-image: url("../../assets/home-background.png");
 }
 .loginBody {
   display: flex;
   flex-direction: column;
-  gap: 5px;
   border: 2px solid black;
-  width: 200px;
-  height: 300px;
+  width: 300px;
+  height: 500px;
   justify-content: center;
   align-items: center;
+  border-radius: 20px;
+  gap: 60px;
+  box-shadow: 3px 3px 4px #525252;
+}
+.topStyle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 .bottomStyle {
   display: flex;
@@ -28,6 +29,37 @@
   align-items: center;
   flex-direction: column;
 }
+.inpStyle {
+  gap: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.userInputStyle {
+  width: 200px;
+  height: 30px;
+  border-radius: 15px;
+}
 .alertStyle {
-  font-size: 10px;
+  font-size: 15px;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.loginText {
+  color: black;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 30px;
+}
+.registerText {
+  color: black;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.buttonStyle {
+  width: 100px;
+  height: 40px;
+  border-radius: 20px;
+  box-shadow: 4px 4px 5px #525252;
+  background-color: rgb(87, 110, 109);
+  color: white;
 }

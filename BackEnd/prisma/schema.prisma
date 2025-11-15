@@ -31,7 +31,7 @@ model Patients {
   updateAt DateTime @updatedAt
 
   doctorId String
-  doctor Doctor @relation(references: [id], fields: [doctorId])
+  doctor Doctor @relation(references: [id], fields: [doctorId], onDelete: Cascade)
 
   alergies Alergies[]
 
@@ -44,5 +44,5 @@ model Alergies {
   createAt DateTime @default(now())
   
   patientId String
-  patient Patients @relation(references: [id], fields: [patientId])
+  patient Patients @relation(references: [id], fields: [patientId], onDelete: Cascade)
 }

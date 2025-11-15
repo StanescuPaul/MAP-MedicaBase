@@ -8,7 +8,7 @@ const port = 3000;
 
 app.use(express.json());
 
-app.post("/doctor/register", async (req, res) => {
+app.post("/doctors/register", async (req, res) => {
   try {
     const { name, userName, password } = req.body;
 
@@ -37,7 +37,7 @@ app.post("/doctor/register", async (req, res) => {
   }
 });
 
-app.post("/doctor/login", async (req, res) => {
+app.post("/doctors/login", async (req, res) => {
   try {
     const { userName, password } = req.body;
 
@@ -79,10 +79,6 @@ app.get("/admin/doctors", async (req, res) => {
   try {
     const doctorList = await db.doctor.findMany();
 
-    if (doctorList.length === 0) {
-      //findManny nu returneaza null deci verificam daca lungimea e 0 atunci nu exista doctori
-      return sendError(res, "Nu s-au gasit doctori", 404);
-    }
     return sendSucces(res, doctorList, 200);
   } catch (error) {
     console.log("ERROR on /admin/doctors GET", error);
@@ -90,16 +86,13 @@ app.get("/admin/doctors", async (req, res) => {
   }
 });
 
-app.get("/doctor/:idDoctor/patients", async (req, res) => {
+app.get("/doctors/:idDoctor/patients", async (req, res) => {
   try {
     const { idDoctor } = req.params;
     const patients = await db.patients.findMany({
       where: { doctorId: idDoctor },
       include: { alergies: true },
     });
-    if (!patients) {
-      return sendError(res, "Nu a fost gasit nici un pacient", 404);
-    }
     return sendSucces(res, patients, 200);
   } catch (error) {
     console.log("ERROR on /doctor/patients GET: ", error);
@@ -107,7 +100,7 @@ app.get("/doctor/:idDoctor/patients", async (req, res) => {
   }
 });
 
-app.get("/doctor/:idDoctor/patients/:idPatient", async (req, res) => {
+app.get("/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
   try {
     const { idPatient } = req.params;
     const patient = await db.patients.findUnique({
@@ -124,7 +117,7 @@ app.get("/doctor/:idDoctor/patients/:idPatient", async (req, res) => {
   }
 });
 
-app.post("/doctor/:idDoctor/patients", async (req, res) => {
+app.post("/doctors/:idDoctor/patients", async (req, res) => {
   try {
     const { idDoctor } = req.params;
     const { name, cnp, alergies } = req.body;
@@ -161,7 +154,7 @@ app.post("/doctor/:idDoctor/patients", async (req, res) => {
   }
 });
 
-app.put("/doctor/:idDoctor/patients/:idPatient", async (req, res) => {
+app.put("/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
   try {
     const { idPatient } = req.params;
     const { alergies } = req.body;
@@ -187,7 +180,7 @@ app.put("/doctor/:idDoctor/patients/:idPatient", async (req, res) => {
   }
 });
 
-app.post("/patient/login", async (req, res) => {
+app.post("/patients/login", async (req, res) => {
   try {
     const { name, cnp } = req.body;
 
@@ -229,7 +222,7 @@ app.post("/patient/login", async (req, res) => {
   }
 });
 
-app.delete("/doctor/:idDoctor/patients/:idPatient", async (req, res) => {
+app.delete("/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
   try {
     const { idDoctor, idPatient } = req.params;
 
@@ -248,10 +241,7 @@ app.delete("/doctor/:idDoctor/patients/:idPatient", async (req, res) => {
         400
       );
     }
-    const deleteAlergies = await db.alergies.deleteMany({
-      //delete many returneaza un count cu cate obiecte sunt
-      where: { patientId: idPatient }, //stergem toate alergiile asociate acelui pacient
-    });
+
     const deletedPatient = await db.patients.delete({
       where: { id: idPatient },
     });
@@ -265,7 +255,7 @@ app.delete("/doctor/:idDoctor/patients/:idPatient", async (req, res) => {
   }
 });
 
-app.delete("/doctor/:idDoctor", async (req, res) => {
+app.delete("/doctors/:idDoctor", async (req, res) => {
   try {
     const { idDoctor } = req.params;
 
@@ -277,18 +267,9 @@ app.delete("/doctor/:idDoctor", async (req, res) => {
       return sendError(res, "Doctorul nu s-a gasit", 404);
     }
 
-    const deletedAlergies = await db.alergies.deleteMany({
-      where: { patient: { doctorId: idDoctor } },
-    }); //stergem prima data alergiile corespunzatoare pacientului doctorului
-
-    const deletedPatients = await db.patients.deleteMany({
-      where: { doctorId: idDoctor },
-    }); //stergem pacientii corespunzatori doctorului
-
     const deletedDoctor = await db.doctor.delete({
-      where: { id: idDoctor },
-    }); //stergem doctorul
-
+      where: { id: doctorId }, // onDelete: cascade se ocupa si de restul
+    });
     return sendSucces(
       res,
       { deletedDoctor, deletedPatients, deletedAlergies },

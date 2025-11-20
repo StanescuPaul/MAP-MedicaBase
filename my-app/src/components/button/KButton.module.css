@@ -1,0 +1,8 @@
+.kbuttonStyle {
+  width: 100px;
+  height: 40px;
+  border-radius: 20px;
+  box-shadow: 4px 4px 5px #525252;
+  background-color: rgb(87, 110, 109);
+  color: white;
+}

@@ -1,6 +1,8 @@
 import { Link } from "react-router";
 import styles from "./Login.module.css";
 import { useState } from "react";
+import { KButton } from "../../components/button/KButton";
+import { KInput } from "../../components/input/KInput";
 
 export function Login() {
   const [userName, setUserName] = useState("");
@@ -10,10 +12,14 @@ export function Login() {
   function onLogin() {
     if (userName === "" || password === "") {
       setAlert("Name and password must be completed!");
+      setUserName("");
+      setPassword("");
       return;
     }
     if (password.length < 8) {
       setAlert("Password must have at least 8 charaters!");
+      setUserName("");
+      setPassword("");
       return;
     }
     setUserName("");
@@ -28,29 +34,30 @@ export function Login() {
           <h3 className={styles.loginText}>Login</h3>
           <p className={styles.alertStyle}>{alert}</p>
           <div className={styles.inpStyle}>
-            <input
+            <KInput
               type="text"
               placeholder="User name"
-              className={styles.userInputStyle}
               value={userName}
-              onChange={(userName) => setUserName(userName.target.value)}
+              onChange={(e) => setUserName(e.target.value)}
             />
-            <input
+            <KInput
               type="password"
               placeholder="Password"
-              className={styles.userInputStyle}
               value={password}
-              onChange={(password) => setPassword(password.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
             />
-            <button onClick={onLogin} className={styles.buttonStyle}>
-              Login
-            </button>
+            <KButton
+              type="button"
+              onClick={onLogin}
+              className={styles.buttonStyle}
+              name="Login"
+            />
           </div>
         </div>
         <div className={styles.bottomStyle}>
           <p className={styles.registerText}>Create account</p>
           <Link to="/doctors/register">
-            <button className={styles.buttonStyle}>Sign in</button>
+            <KButton name="Sign in" />
           </Link>
         </div>
       </div>

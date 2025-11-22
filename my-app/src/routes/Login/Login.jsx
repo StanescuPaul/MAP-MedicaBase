@@ -11,7 +11,7 @@ export function Login() {
 
   function onLogin() {
     if (userName === "" || password === "") {
-      setAlert("Name and password must be completed!");
+      setAlert("Everything must be completed!");
       setUserName("");
       setPassword("");
       return;

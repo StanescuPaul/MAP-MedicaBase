@@ -1,38 +1,60 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { KButton } from "../../components/button/KButton";
 import { KInput } from "../../components/input/KInput";
 import styles from "./Register.module.css";
 
 export function Register() {
-  const [userName, setUserName] = useState("");
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
+  const [form, setForm] = useState({
+    name: "",
+    userName: "",
+    password: "",
+  });
   const [allert, setAllert] = useState(null);
 
-  function handleOnSignIn() {
-    if (!name || !userName || !password) {
-      setAllert({ type: "error", message: "Everything must be completed !" });
-      setName("");
-      setUserName("");
-      setPassword("");
-      return;
-    }
-    if (userName.length < 8 || password.length < 8) {
+  const handleOnSignIn = async () => {
+    try {
+      //const rawResponse primste raspunsul de la server dupa ce trimitem datele
+      const rawResponse = await fetch(
+        "http://localhost:5000/doctors/register",
+        {
+          //Ruta unde face actiunile
+          method: "POST", //metoda pe care o folosim, GET e default
+          headers: {
+            "Content-Type": "application/json", //Anuntam server-ul ca datele sun JSON
+          },
+          body: JSON.stringify(form), //transformam datele in string json si le trimitem
+        }
+      );
+
+      const data = await rawResponse.json(); //in data preluam raspunsul de la backend format json pentru a putea folosi raspunsul ca pe un obiect ca un plic pe care il deschidem ca la then.then. tot asa.
+      //rawResponse e o promisiune deci trebuie await sa asteptam raspunsul
+      if (rawResponse.ok) {
+        //.ok este o conventie daca am raspuns afirmativ cod de la 200-299 de la backend
+        setAllert({
+          type: data.success, //putem folosi data.success pentru ca asa am facut in sendSucces/sendError
+          message: data.data.message || data.message || "Cont creat cu succes", //data.data.message pentru ca in API avem in raspuns un oiect data in care se afla mesajul deci nu poate fi apelat direct cu .message
+        });
+        setForm({
+          name: "",
+          userName: "",
+          password: "",
+        });
+      } else {
+        setAllert({ type: data.success, message: data.message }); //aici am .message pentru ca nu e un obiect ca si la succes
+        setForm({
+          name: "",
+          userName: "",
+          password: "",
+        });
+      }
+    } catch (err) {
       setAllert({
         type: "error",
-        message: "USERNAME and PASSWORD must have at least 8 characters !",
+        message: "Eroare la accesarea serverului", //eroare de conexiune nu e acelasi lucru cu catch din back-end
       });
-      setName("");
-      setUserName("");
-      setPassword("");
-      return;
     }
-    setAllert({ type: "succes", message: "Account created" });
-    setName("");
-    setUserName("");
-    setPassword("");
-  }
+  };
 
   return (
     <div className={styles.container}>
@@ -48,20 +70,20 @@ export function Register() {
           <KInput
             type="text"
             placeholder="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
           />
           <KInput
             type="text"
             placeholder="User name"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
+            value={form.userName}
+            onChange={(e) => setForm({ ...form, userName: e.target.value })}
           />
           <KInput
             type="password"
             placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
           />
           <KButton onClick={handleOnSignIn} name="Sign in" />
         </div>

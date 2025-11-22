@@ -1,13 +1,13 @@
 export function sendSucces(res, data, status) {
   res.status(status).json({
-    success: true,
+    success: "success",
     data,
   });
 }
 
-export function sendError(res, meassage, status) {
+export function sendError(res, message, status) {
   res.status(status).json({
-    success: false,
-    meassage,
+    success: "error",
+    message,
   });
 }

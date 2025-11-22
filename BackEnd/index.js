@@ -1,10 +1,14 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
+import cors from "cors"; // nu mergea conexiunea cu react fara
 import { sendSucces, sendError } from "./helper/response.js"; //am creeat 2 functii separate pentru a fi mai usor de gestionat erorile si succes-urile si pentru a fi mai consistent cu ele si mai usor de comunicat cu forntend-ul
+import "dotenv/config"; //cu noile update-uri in loc de url din schema.prisma
 
 const app = express();
 const db = new PrismaClient();
-const port = 3000;
+const port = 5000;
+
+app.use(cors()); //am nevoie neaparat de asta pentru a putea accesa serverul
 
 app.use(express.json());
 
@@ -19,6 +23,15 @@ app.post("/doctors/register", async (req, res) => {
         400
       );
     }
+
+    const doctorUserExist = await db.doctor.findUnique({
+      where: { userName: userName },
+    });
+
+    if (doctorUserExist) {
+      return sendError(res, "Username-ul este deja folosit", 400); //error are in componenta res,message,status
+    }
+
     if (password.length < 8) {
       return sendError(res, "Parola trebuie sa contina minim 8 caractere", 400);
     }
@@ -30,7 +43,15 @@ app.post("/doctors/register", async (req, res) => {
         password: password,
       },
     });
-    return sendSucces(res, doctor, 201);
+    return sendSucces(
+      //succes are in componenta res,data(care e un obiect sau nu iar de asta depinde cum se preiau datele in frontend),status
+      res,
+      {
+        message: "Cont creat cu succes",
+        doctor,
+      },
+      201
+    );
   } catch (error) {
     console.log("ERROR on /doctor/register POST: ", error);
     sendError(res, "Internal server error", 500);
@@ -42,7 +63,7 @@ app.post("/doctors/login", async (req, res) => {
     const { userName, password } = req.body;
 
     if (!userName || !password) {
-      return sendError(res, "Username-ul si parola sunt oblivatorii", 400);
+      return sendError(res, "Username-ul si parola sunt obligatorii", 400);
     }
 
     const doctor = await db.doctor.findUnique({
@@ -268,13 +289,9 @@ app.delete("/doctors/:idDoctor", async (req, res) => {
     }
 
     const deletedDoctor = await db.doctor.delete({
-      where: { id: doctorId }, // onDelete: cascade se ocupa si de restul
+      where: { id: idDoctor }, // onDelete: cascade se ocupa si de restul
     });
-    return sendSucces(
-      res,
-      { deletedDoctor, deletedPatients, deletedAlergies },
-      200
-    );
+    return sendSucces(res, deletedDoctor, 200);
   } catch (error) {
     console.log("ERROR on /doctor/:idDoctor DELETE: ", error);
     sendError(res, "Internal server error", 500);

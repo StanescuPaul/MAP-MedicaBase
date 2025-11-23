@@ -3,8 +3,10 @@ import styles from "./Login.module.css";
 import { useState } from "react";
 import { KButton } from "../../components/button/KButton";
 import { KInput } from "../../components/input/KInput";
+import { useNavigate } from "react-router-dom"; //pentru a putea naviga intr-un if statement
 
 export function Login() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     userName: "",
     password: "",
@@ -16,7 +18,7 @@ export function Login() {
       const rawResponse = await fetch("http://localhost:5000/doctors/login", {
         method: "POST", //metoda folosita pe ruta
         headers: {
-          "Content-type": "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(form), //modul in care trimitem datele catre server
       });
@@ -30,12 +32,18 @@ export function Login() {
             data.message ||
             "Conectare realizata cu succes",
         });
+        const idDoctor = data.data.doctor.id; // luam id din response-ul de la server pentru a-l injecta in url sa accesam doar pacientii acelui doctor, datele se afla in obiectul data din helper acolo e doctor.id
+        navigate(`/doctors/${idDoctor}/patients`); // folosim navigate in if statement sa ne redirectioneze doar intr-un anumit caz si Link ca sa ne duca un buton pe acea ruta orice ar fi
         setForm({
           userName: "",
           password: "",
         });
       } else {
         setAllert({ type: data.type, message: data.message });
+        setForm({
+          userName: "",
+          password: "",
+        });
       }
     } catch (err) {
       setAllert({ type: "error", message: "Eroare la conectare la server" });

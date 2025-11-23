@@ -32,8 +32,12 @@ app.post("/doctors/register", async (req, res) => {
       return sendError(res, "Username-ul este deja folosit", 400); //error are in componenta res,message,status
     }
 
-    if (password.length < 8) {
-      return sendError(res, "Parola trebuie sa contina minim 8 caractere", 400);
+    if (password.length < 8 || userName.length < 8) {
+      return sendError(
+        res,
+        "Parola si UserName trebuie sa contina minim 8 caractere",
+        400
+      );
     }
 
     const doctor = await db.doctor.create({

@@ -85,7 +85,7 @@ app.post("/doctors/login", async (req, res) => {
     return sendSucces(
       res,
       {
-        meassage: "Autentificare reusita",
+        message: "Autentificare reusita",
         doctor: {
           id: doctor.id,
           name: doctor.name,

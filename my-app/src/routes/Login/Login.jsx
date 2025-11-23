@@ -5,50 +5,73 @@ import { KButton } from "../../components/button/KButton";
 import { KInput } from "../../components/input/KInput";
 
 export function Login() {
-  const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState("");
-  const [alert, setAlert] = useState("");
+  const [form, setForm] = useState({
+    userName: "",
+    password: "",
+  });
+  const [allert, setAllert] = useState(null);
 
-  function onLogin() {
-    if (userName === "" || password === "") {
-      setAlert("Everything must be completed!");
-      setUserName("");
-      setPassword("");
-      return;
+  const handleOnLogin = async () => {
+    try {
+      const rawResponse = await fetch("http://localhost:5000/doctors/login", {
+        method: "POST", //metoda folosita pe ruta
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(form), //modul in care trimitem datele catre server
+      });
+      const data = await rawResponse.json(); // asteptarea datelor de la response
+
+      if (rawResponse.ok) {
+        setAllert({
+          type: data.type,
+          message:
+            data.data.message ||
+            data.message ||
+            "Conectare realizata cu succes",
+        });
+        setForm({
+          userName: "",
+          password: "",
+        });
+      } else {
+        setAllert({ type: data.type, message: data.message });
+      }
+    } catch (err) {
+      setAllert({ type: "error", message: "Eroare la conectare la server" });
+      setForm({
+        userName: "",
+        password: "",
+      });
     }
-    if (password.length < 8) {
-      setAlert("Password must have at least 8 charaters!");
-      setUserName("");
-      setPassword("");
-      return;
-    }
-    setUserName("");
-    setPassword("");
-    setAlert("");
-  }
+  };
 
   return (
     <div className={styles.container}>
       <div className={styles.loginBody}>
         <div className={styles.topStyle}>
           <h3 className={styles.loginText}>Login</h3>
-          <p className={styles.alertStyle}>{alert}</p>
+          {allert && (
+            <p className={`${styles.allertStyle} ${styles[allert.type]}`}>
+              {allert.message}
+            </p> //style in functie de tipul mesajului
+          )}
           <div className={styles.inpStyle}>
             <KInput
               type="text"
               placeholder="User name"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
+              value={form.userName}
+              onChange={(e) => setForm({ ...form, userName: e.target.value })}
             />
             <KInput
               type="password"
               placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
             />
             <KButton
               type="button"
-              onClick={onLogin}
+              onClick={handleOnLogin}
               className={styles.buttonStyle}
               name="Login"
             />

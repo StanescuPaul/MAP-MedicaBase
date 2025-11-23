@@ -36,10 +36,15 @@
   align-items: center;
   flex-direction: column;
 }
-.alertStyle {
+.allertStyle {
   font-size: 15px;
-  color: white;
   font-family: Arial, Helvetica, sans-serif;
+}
+.success {
+  color: rgb(165, 255, 165);
+}
+.error {
+  color: red;
 }
 .loginText {
   color: black;

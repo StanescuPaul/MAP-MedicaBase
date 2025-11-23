@@ -32,7 +32,7 @@ export function Register() {
       if (rawResponse.ok) {
         //.ok este o conventie daca am raspuns afirmativ cod de la 200-299 de la backend
         setAllert({
-          type: data.success, //putem folosi data.success pentru ca asa am facut in sendSucces/sendError
+          type: data.type, //putem folosi data.success pentru ca asa am facut in sendSucces/sendError
           message: data.data.message || data.message || "Cont creat cu succes", //data.data.message pentru ca in API avem in raspuns un oiect data in care se afla mesajul deci nu poate fi apelat direct cu .message
         });
         setForm({
@@ -41,7 +41,7 @@ export function Register() {
           password: "",
         });
       } else {
-        setAllert({ type: data.success, message: data.message }); //aici am .message pentru ca nu e un obiect ca si la succes
+        setAllert({ type: data.type, message: data.message }); //aici am .message pentru ca nu e un obiect ca si la succes
         setForm({
           name: "",
           userName: "",
@@ -51,7 +51,7 @@ export function Register() {
     } catch (err) {
       setAllert({
         type: "error",
-        message: "Eroare la accesarea serverului", //eroare de conexiune nu e acelasi lucru cu catch din back-end
+        message: "Eroare la conectare la server", //eroare de conexiune nu e acelasi lucru cu catch din back-end
       });
     }
   };
@@ -90,7 +90,7 @@ export function Register() {
         <div className={styles.bottomLable}>
           <p>Existing accout</p>
           <Link to="/doctors/login">
-            <KButton name="To Login" />
+            <KButton name="Login" />
           </Link>
         </div>
       </div>

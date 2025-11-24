@@ -120,7 +120,7 @@ app.get("/doctors/:idDoctor/patients", async (req, res) => {
     });
     return sendSucces(res, patients, 200);
   } catch (error) {
-    console.log("ERROR on /doctor/patients GET: ", error);
+    console.log("ERROR on /doctors/patients GET: ", error);
     sendError(res, "Internal server error", 500);
   }
 });
@@ -138,6 +138,31 @@ app.get("/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
     return sendSucces(res, patient, 200);
   } catch (error) {
     console.log("ERROR on /doctor/patients/:idPatient GET: ", error);
+    sendError(res, "Internal server error", 500);
+  }
+});
+
+app.get("/doctors/:idDoctor", async (req, res) => {
+  try {
+    const { idDoctor } = req.params;
+    const doctor = await db.doctor.findUnique({
+      where: { id: idDoctor },
+    });
+
+    if (!doctor) {
+      sendError(res, "Eroare la gasirea doctorului", 400);
+    }
+
+    return sendSucces(
+      res,
+      {
+        id: doctor.id,
+        name: doctor.name,
+      },
+      200
+    );
+  } catch (error) {
+    console.log("ERROR on /doctors/:idDoctor GET: ", error);
     sendError(res, "Internal server error", 500);
   }
 });

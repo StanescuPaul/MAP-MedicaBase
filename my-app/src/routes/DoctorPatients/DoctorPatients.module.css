@@ -1,0 +1,38 @@
+html,
+body {
+  /* Asigură că HTML și BODY ocupă 100% din fereastra vizibilă */
+  height: 100%;
+  margin: 0; /* Elimină marginile implicite ale browserului */
+  padding: 0; /* Elimină padding-ul implicit */
+
+  /*Blochează orice scroll la nivelul paginii */
+  overflow: hidden;
+}
+.container {
+  display: flex;
+  height: 100vh;
+}
+.kdoctorLable {
+  width: 300px;
+  background-color: rgb(87, 110, 109);
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  justify-content: center;
+}
+.textStyle {
+  color: white;
+  margin: 0px;
+}
+.kpatientsLable {
+  /* height: 100%; */
+  flex-grow: 1; /*permite sa ocupe restul de spatiu ramas*/
+  overflow-y: auto; /*cand ontinutul merge prea mult in jos adauga scrollview cu acest overflow-y putem face scroll*/
+  padding: 20px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap; /*pentru a se pune pe randuri noi */
+  margin: 0;
+  align-content: flex-start; /*pune toate randurile randate la inceput in cazul nostu am vrut sa le lipeasca*/
+}

@@ -9,8 +9,7 @@ export function DoctorPatients() {
   const [doctorName, setDoctorName] = useState("");
   const [patientsData, setPatientsData] = useState([]); //array gol cu toti pacientii
   const [cnp, setCnp] = useState("");
-
-  let number = 1;
+  const [allert, setAllert] = useState(null);
 
   useEffect(() => {
     const dataDoctor = async () => {
@@ -37,6 +36,35 @@ export function DoctorPatients() {
     dataDoctor(); //apelam functia pentru a prelua datele
   }, [idDoctor]); //luam datele din fetch de fiecare data cand se schimba id-ul doctorului
 
+  const handleOnFind = async () => {
+    //cand se apasa butonul se executa query params cauta si daca este gol inputul returneaza lista initiala
+    try {
+      if (cnp.length === 13 || cnp === "") {
+        //in cazul in care cnp are numarul bun de cifre afisam datele sau daca este 0 afisam toata lista daca nu dam eroarea
+        const rawResponse = await fetch(
+          `http://localhost:5000/doctors/${idDoctor}/patients?cnp=${cnp}`
+        );
+
+        const dataPatient = await rawResponse.json();
+
+        if (rawResponse.ok) {
+          setPatientsData(dataPatient.data);
+          setAllert(null);
+          setCnp("");
+        } else {
+          setAllert(dataPatient.message || "Eroare necunoscuta la cautare");
+          setCnp("");
+        }
+      } else {
+        setAllert("CNP trebuie sa contina 13 cifre");
+        setCnp("");
+      }
+    } catch (err) {
+      setAllert("Eroare la conectarea la server");
+      setCnp("");
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.kdoctorLable}>
@@ -52,15 +80,20 @@ export function DoctorPatients() {
             value={cnp}
             onChange={(e) => setCnp(e.target.value)}
           />
-          <button className={styles.inpBtnStyle}>FIND</button>
+          <button className={styles.inpBtnStyle} onClick={handleOnFind}>
+            FIND
+          </button>
+        </div>
+        <div className={styles.allertLable}>
+          <p className={styles.allertStyle}>{allert}</p>
         </div>
         <div className={styles.kpatientsLable}>
-          {patientsData.map((patientData) => (
+          {patientsData.map((patientData, index) => (
             <KPatient
               key={patientData.id}
               name={patientData.name}
               cnp={patientData.cnp}
-              number={number++}
+              number={index + 1} // index da numarul de mapari realizate e mai eficient decat o variabila let
               // createdAt={new Date(patientData.createAt).toLocaleDateString(
               //   "ro-RO" //convetrim datele pentru a avea doar luna anul si ziua
               // )}

@@ -1,9 +1,11 @@
 html,
 body {
-  /* Asigură că HTML și BODY ocupă 100% din fereastra vizibilă */
+  /* Asigură că HTML și BODY ocupă 100% din fereastra vizibilă*/
   height: 100%;
-  margin: 0; /* Elimină marginile implicite ale browserului */
-  padding: 0; /* Elimină padding-ul implicit */
+  margin: 0;
+  /*Elimină marginile implicite ale browserului */
+  padding: 0;
+  /*Elimină padding-ul implicit*/
 
   /*Blochează orice scroll la nivelul paginii */
   overflow: hidden;
@@ -31,6 +33,7 @@ body {
   flex-grow: 1; /*permite sa ocupe restul de spatiu ramas*/
   overflow-y: auto; /*cand ontinutul merge prea mult in jos adauga scrollview cu acest overflow-y putem face scroll*/
   padding: 20px;
+  padding-top: 0px;
   display: flex;
   gap: 20px;
   flex-wrap: wrap; /*pentru a se pune pe randuri noi */
@@ -68,4 +71,20 @@ body {
 .inpBtnStyle:hover {
   background-color: rgb(67, 84, 83);
   transform: translateY(-1px);
+}
+.allertStyle {
+  color: red;
+  font-size: 20px;
+}
+.allertLable {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+.continutDreapta {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }

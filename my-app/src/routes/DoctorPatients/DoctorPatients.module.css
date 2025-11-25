@@ -35,7 +35,7 @@ body {
   padding: 20px;
   padding-top: 0px;
   display: flex;
-  gap: 20px;
+  gap: 10px;
   flex-wrap: wrap; /*pentru a se pune pe randuri noi */
   margin: 0;
   align-content: flex-start; /*pune toate randurile randate la inceput in cazul nostu am vrut sa le lipeasca*/
@@ -87,4 +87,36 @@ body {
   display: flex;
   flex-direction: column;
   width: 100%;
+}
+.addBtnStyle {
+  width: 210px;
+  height: 250px;
+  display: flex;
+  border-radius: 20px;
+  background-color: #adadad;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  box-shadow: 3px 3px 5px #787878;
+}
+.addBtnStyle:hover {
+  background-color: #858585;
+  transform: translateY(-1px);
+}
+.addImgStyle {
+  width: 100px;
+  height: 100px;
+  border-radius: 999px;
+  margin: 0;
+  padding: 0;
+}
+.textAddStyle {
+  font-size: 22px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.Visible {
+  visibility: visible;
+}
+.Hidden {
+  display: none;
 }

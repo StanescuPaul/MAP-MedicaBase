@@ -10,6 +10,7 @@ export function DoctorPatients() {
   const [patientsData, setPatientsData] = useState([]); //array gol cu toti pacientii
   const [cnp, setCnp] = useState("");
   const [allert, setAllert] = useState(null);
+  const [visible, setVisible] = useState("Visible"); //pentru a seta vizibilitatea butonului de add
 
   useEffect(() => {
     const dataDoctor = async () => {
@@ -43,6 +44,7 @@ export function DoctorPatients() {
         //in cazul in care cnp are numarul bun de cifre afisam datele sau daca este 0 afisam toata lista daca nu dam eroarea
         const rawResponse = await fetch(
           `http://localhost:5000/doctors/${idDoctor}/patients?cnp=${cnp}`
+          //query params nu trebuie introdusi si in backend rout pentru ca sunt operatii facute pe anumite date din backend dar params urile normale definite cu :idCeva trebuie pentru ca acestia dau ierarhia si de unde se iau ce date
         );
 
         const dataPatient = await rawResponse.json();
@@ -54,6 +56,11 @@ export function DoctorPatients() {
         } else {
           setAllert(dataPatient.message || "Eroare necunoscuta la cautare");
           setCnp("");
+        }
+        if (cnp.length === 13) {
+          setVisible("Hidden");
+        } else if (cnp === "") {
+          setVisible("Visible");
         }
       } else {
         setAllert("CNP trebuie sa contina 13 cifre");
@@ -102,6 +109,14 @@ export function DoctorPatients() {
               // )}
             />
           ))}
+          <button className={`${styles.addBtnStyle} ${styles[visible]}`}>
+            {/*pentru a avea butonul de add doar in lista completa*/}
+            <img
+              className={styles.addImgStyle}
+              src={require("../../assets/addBtn.png")}
+            />
+            <h1 className={styles.textAddStyle}>Add patient</h1>
+          </button>
         </div>
       </div>
     </div>

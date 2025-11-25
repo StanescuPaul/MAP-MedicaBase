@@ -8,6 +8,9 @@ export function DoctorPatients() {
   const { idDoctor } = useParams(); //luam din url id-ul doctorului
   const [doctorName, setDoctorName] = useState("");
   const [patientsData, setPatientsData] = useState([]); //array gol cu toti pacientii
+  const [cnp, setCnp] = useState("");
+
+  let number = 1;
 
   useEffect(() => {
     const dataDoctor = async () => {
@@ -16,6 +19,7 @@ export function DoctorPatients() {
           //pentru await trebuie sa fiu intr-un async function
           `http://localhost:5000/doctors/${idDoctor}`
         );
+
         const dataDoctor = await responseDoctorData.json();
 
         setDoctorName(dataDoctor.data.name || dataDoctor.name); //datele schima doctorName
@@ -40,20 +44,32 @@ export function DoctorPatients() {
         <h2 className={styles.textStyle}>User</h2>
         <KDoctor name={doctorName} />
       </div>
-      <div className={styles.kpatientsLable}>
-        {patientsData.map((patientData) => (
-          <KPatient
-            key={patientData.id}
-            name={patientData.name}
-            cnp={patientData.cnp}
-            // createdAt={new Date(patientData.createAt).toLocaleDateString(
-            //   "ro-RO" //convetrim datele pentru a avea doar luna anul si ziua
-            // )}
-            // updatedAt={new Date(patientData.updateAt).toLocaleDateString(
-            //   "ro-RO" //convetrim datele pentru a avea doar luna anul si ziua
-            // )}
+      <div className={styles.continutDreapta}>
+        <div className={styles.inputLable}>
+          <input
+            className={styles.inputStyle}
+            placeholder="Enter CNP"
+            value={cnp}
+            onChange={(e) => setCnp(e.target.value)}
           />
-        ))}
+          <button className={styles.inpBtnStyle}>FIND</button>
+        </div>
+        <div className={styles.kpatientsLable}>
+          {patientsData.map((patientData) => (
+            <KPatient
+              key={patientData.id}
+              name={patientData.name}
+              cnp={patientData.cnp}
+              number={number++}
+              // createdAt={new Date(patientData.createAt).toLocaleDateString(
+              //   "ro-RO" //convetrim datele pentru a avea doar luna anul si ziua
+              // )}
+              // updatedAt={new Date(patientData.updateAt).toLocaleDateString(
+              //   "ro-RO" //convetrim datele pentru a avea doar luna anul si ziua
+              // )}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

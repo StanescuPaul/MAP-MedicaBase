@@ -20,13 +20,14 @@ body {
   flex-direction: column;
   flex-shrink: 0;
   justify-content: center;
+  padding-bottom: 100px;
 }
 .textStyle {
   color: white;
   margin: 0px;
 }
 .kpatientsLable {
-  /* height: 100%; */
+  height: 100%;
   flex-grow: 1; /*permite sa ocupe restul de spatiu ramas*/
   overflow-y: auto; /*cand ontinutul merge prea mult in jos adauga scrollview cu acest overflow-y putem face scroll*/
   padding: 20px;
@@ -35,4 +36,36 @@ body {
   flex-wrap: wrap; /*pentru a se pune pe randuri noi */
   margin: 0;
   align-content: flex-start; /*pune toate randurile randate la inceput in cazul nostu am vrut sa le lipeasca*/
+  justify-content: center;
+}
+.inputLable {
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+.inputStyle {
+  width: 500px;
+  border-radius: 20px;
+  border: 1 solid;
+  border-color: #5e9090;
+  text-align: center;
+  height: 30px;
+}
+.inputStyle:hover {
+  background-color: #e6e6e6;
+}
+.inpBtnStyle {
+  width: 70px;
+  height: 35px;
+  border-radius: 15px;
+  background-color: rgb(87, 110, 109);
+  color: white;
+}
+.inpBtnStyle:hover {
+  background-color: rgb(67, 84, 83);
+  transform: translateY(-1px);
 }

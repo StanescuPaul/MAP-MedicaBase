@@ -2,7 +2,7 @@ import styles from "./KDoctor.module.css";
 
 export function KDoctor({ name }) {
   return (
-    <div className={styles.container}>
+    <button className={styles.container}>
       <div className={styles.doctorCard}>
         <div className={styles.topLable}>
           <p className={styles.titleStyle}>Doctor</p>
@@ -17,6 +17,6 @@ export function KDoctor({ name }) {
           <p className={styles.dataStyle}>{name}</p>
         </div>
       </div>
-    </div>
+    </button>
   );
 }

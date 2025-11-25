@@ -114,10 +114,23 @@ app.get("/admin/doctors", async (req, res) => {
 app.get("/doctors/:idDoctor/patients", async (req, res) => {
   try {
     const { idDoctor } = req.params;
+    const { cnp } = req.query;
+
+    let whereCondition = { doctorId: idDoctor }; //aici bagam id doctor la care e pacientul
+
+    if (cnp) {
+      whereCondition.cnp = cnp; //aici combinam conditiile pentru a face o interogare si pe baza de cnp
+    }
+
     const patients = await db.patients.findMany({
-      where: { doctorId: idDoctor },
-      include: { alergies: true },
+      where: whereCondition,
+      //nu includ si alergiile deoarece aici vreau doar sa primesc pacientii alergiile le am in ruta /:idPatient
     });
+
+    if (cnp && patients.length === 0) {
+      return sendError(res, `Nu exista pacientul cu acest CNP: ${cnp}`, 404); //in caz ca avem cnp si lista de pacienti e 0 atunci dam eroare pentru ca nu exista pacientul cu acel cnp
+    }
+
     return sendSucces(res, patients, 200);
   } catch (error) {
     console.log("ERROR on /doctors/patients GET: ", error);

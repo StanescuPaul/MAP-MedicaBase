@@ -204,7 +204,7 @@ app.post("/doctors/:idDoctor/patients", async (req, res) => {
         name: name,
         cnp: cnp,
         alergies: {
-          create: alergies.map((alergie) => ({ name: alergie.name })),
+          create: alergies.map((alergie) => ({ name: alergie })),
         },
         doctor: { connect: { id: idDoctor } }, // conectam datele de mai sus cu doctorul cu id-ul respectiv
       },
@@ -220,7 +220,7 @@ app.post("/doctors/:idDoctor/patients", async (req, res) => {
 app.put("/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
   try {
     const { idPatient } = req.params;
-    const { alergies } = req.body;
+    const { allergies } = req.body;
 
     if (!alergies) {
       return sendError(res, "Nu sunt introduse update-uri", 400);

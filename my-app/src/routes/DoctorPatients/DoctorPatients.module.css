@@ -118,5 +118,5 @@ body {
   visibility: visible;
 }
 .Hidden {
-  display: none;
+  display: none; /*pentru a disparea butonul si a nu fi doar invizibil sa se aplice bine style-urile*/
 }

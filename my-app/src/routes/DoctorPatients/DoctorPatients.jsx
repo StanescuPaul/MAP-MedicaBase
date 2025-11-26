@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { KDoctor } from "../../components/doctorCard/KDoctor";
 import { useState, useEffect } from "react";
 import { KPatient } from "../../components/patientCard/KPatient";
+import { KForm } from "../../components/addButton/KForm";
 import styles from "./DoctorPatients.module.css";
 
 export function DoctorPatients() {
@@ -11,6 +12,7 @@ export function DoctorPatients() {
   const [cnp, setCnp] = useState("");
   const [allert, setAllert] = useState(null);
   const [visible, setVisible] = useState("Visible"); //pentru a seta vizibilitatea butonului de add
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   useEffect(() => {
     const dataDoctor = async () => {
@@ -58,6 +60,7 @@ export function DoctorPatients() {
           setCnp("");
         }
         if (cnp.length === 13) {
+          //ascundem butonul de add daca suntem intr-un find
           setVisible("Hidden");
         } else if (cnp === "") {
           setVisible("Visible");
@@ -72,6 +75,13 @@ export function DoctorPatients() {
     }
   };
 
+  function handleOnAdd() {
+    setIsFormOpen(true);
+  }
+  function handleCloseForm() {
+    setIsFormOpen(false);
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.kdoctorLable}>
@@ -80,6 +90,7 @@ export function DoctorPatients() {
         <KDoctor name={doctorName} />
       </div>
       <div className={styles.continutDreapta}>
+        {isFormOpen && <KForm close={handleCloseForm} />}
         <div className={styles.inputLable}>
           <input
             className={styles.inputStyle}
@@ -109,11 +120,15 @@ export function DoctorPatients() {
               // )}
             />
           ))}
-          <button className={`${styles.addBtnStyle} ${styles[visible]}`}>
+          <button
+            className={`${styles.addBtnStyle} ${styles[visible]}`}
+            onClick={handleOnAdd} // daca dau click trecem pe true si afisam formularul
+          >
             {/*pentru a avea butonul de add doar in lista completa*/}
             <img
               className={styles.addImgStyle}
               src={require("../../assets/addBtn.png")}
+              alt="add patient"
             />
             <h1 className={styles.textAddStyle}>Add patient</h1>
           </button>

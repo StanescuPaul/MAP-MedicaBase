@@ -1,0 +1,79 @@
+.fundalStyle {
+  background-color: rgba(0, 0, 0, 0.6);
+  position: fixed;
+  top: 0;
+  left: 0; /*pentru a acoperia intregul view*/
+  right: 0;
+  bottom: 0;
+  z-index: 1000px; /* asta ridica formularul peste orice altceva de pe ecran*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.formStyle {
+  display: flex;
+  height: 650px;
+  width: 450px;
+  background-color: rgb(87, 110, 109);
+  box-shadow: 10px 10px 20px #343434;
+  border-radius: 20px;
+  align-items: center;
+  flex-direction: column;
+  gap: 15px;
+  justify-content: center;
+  position: relative;
+}
+.inputStyle {
+  width: 300px;
+  height: 30px;
+  border-radius: 10px;
+  padding-left: 10px;
+}
+.inputStyle:hover {
+  background-color: #c3c3c3;
+}
+.addInpStyle {
+  height: 60px;
+  width: 60px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+}
+.addInpStyle:hover {
+  background-color: #c8c8c8;
+  transform: translateY(-2px);
+}
+.inpAllergiLable {
+  gap: 5px;
+  display: flex;
+  align-items: center;
+  margin-left: 35px; /*scadem latimea butonului si gap-ul ca sa aliniem inputurile*/
+}
+.deleteStyle {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+}
+.deleteStyle:hover {
+  color: white;
+  background-color: red;
+}
+.alertStyle {
+  color: red;
+  font-size: 15px;
+}
+.backStyle {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  position: absolute; /*asa pozitionam butonul in coltul ecranului, am nevoie si de position relative pe containerul unde vreau sa l pun*/
+  top: 10px;
+  right: 10px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+.backStyle:hover {
+  color: white;
+  background-color: red;
+}

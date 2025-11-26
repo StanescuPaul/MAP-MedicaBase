@@ -14,6 +14,20 @@ export function DoctorPatients() {
   const [visible, setVisible] = useState("Visible"); //pentru a seta vizibilitatea butonului de add
   const [isFormOpen, setIsFormOpen] = useState(false);
 
+  const fetchPatientsData = async () => {
+    //functia este creata pentru a putea trimite functia ca prop la KForm ca la finalul adaugarii unui pacient in form sa faca o rerandare a listei de pacienti pentru a se actualiza lista in timp real
+    try {
+      const rawPatientsData = await fetch(
+        `http://localhost:5000/doctors/${idDoctor}/patients`
+      );
+
+      const patientsInfo = await rawPatientsData.json();
+      setPatientsData(patientsInfo.data);
+    } catch (err) {
+      console.log("Eroare la rerandarea pacientilor");
+    }
+  };
+
   useEffect(() => {
     const dataDoctor = async () => {
       try {
@@ -90,7 +104,13 @@ export function DoctorPatients() {
         <KDoctor name={doctorName} />
       </div>
       <div className={styles.continutDreapta}>
-        {isFormOpen && <KForm close={handleCloseForm} />}
+        {isFormOpen && (
+          <KForm
+            close={handleCloseForm}
+            idDoctor={idDoctor}
+            onChangeForm={fetchPatientsData}
+          />
+        )}
         <div className={styles.inputLable}>
           <input
             className={styles.inputStyle}

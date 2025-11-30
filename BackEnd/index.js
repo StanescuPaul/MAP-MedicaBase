@@ -17,11 +17,7 @@ app.post("/doctors/register", async (req, res) => {
     const { name, userName, password } = req.body;
 
     if (!name || !userName || !password) {
-      return sendError(
-        res,
-        "Numele,username-ul si parola sunt obligatorii",
-        400
-      );
+      return sendError(res, "Name, username, and password are required", 400);
     }
 
     const doctorUserExist = await db.doctor.findUnique({
@@ -29,13 +25,13 @@ app.post("/doctors/register", async (req, res) => {
     });
 
     if (doctorUserExist) {
-      return sendError(res, "Username-ul este deja folosit", 400); //error are in componenta res,message,status
+      return sendError(res, "Username is already used", 400); //error are in componenta res,message,status
     }
 
     if (password.length < 8 || userName.length < 8) {
       return sendError(
         res,
-        "Parola si UserName trebuie sa contina minim 8 caractere",
+        "The password and username must contain at least 8 characters",
         400
       );
     }
@@ -51,7 +47,7 @@ app.post("/doctors/register", async (req, res) => {
       //succes are in componenta res,data(care e un obiect sau nu iar de asta depinde cum se preiau datele in frontend),status
       res,
       {
-        message: "Cont creat cu succes",
+        message: "Account successfully created",
         doctor,
       },
       201
@@ -67,7 +63,7 @@ app.post("/doctors/login", async (req, res) => {
     const { userName, password } = req.body;
 
     if (!userName || !password) {
-      return sendError(res, "Username-ul si parola sunt obligatorii", 400);
+      return sendError(res, "Username and password are required", 400);
     }
 
     const doctor = await db.doctor.findUnique({
@@ -75,17 +71,17 @@ app.post("/doctors/login", async (req, res) => {
     });
 
     if (!doctor) {
-      return sendError(res, "Parola sau username invalide", 401);
+      return sendError(res, "Invalid password or username", 401);
     }
 
     if (doctor.password !== password) {
-      return sendError(res, "Parola sau username invalide", 401);
+      return sendError(res, "Invalid password or username", 401);
     }
 
     return sendSucces(
       res,
       {
-        message: "Autentificare reusita",
+        message: "Login successful",
         doctor: {
           id: doctor.id,
           name: doctor.name,
@@ -128,7 +124,7 @@ app.get("/doctors/:idDoctor/patients", async (req, res) => {
     });
 
     if (cnp && patients.length === 0) {
-      return sendError(res, `Nu exista pacientul cu acest CNP: ${cnp}`, 404); //in caz ca avem cnp si lista de pacienti e 0 atunci dam eroare pentru ca nu exista pacientul cu acel cnp
+      return sendError(res, `There is no patient with this CNP: ${cnp}`, 404); //in caz ca avem cnp si lista de pacienti e 0 atunci dam eroare pentru ca nu exista pacientul cu acel cnp
     }
 
     return sendSucces(res, patients, 200);
@@ -146,7 +142,7 @@ app.get("/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
       include: { alergies: true },
     });
     if (!patient) {
-      return sendError(res, "Pacientul nu a fost gasit", 404);
+      return sendError(res, "The patient was not found", 404);
     }
     return sendSucces(res, patient, 200);
   } catch (error) {
@@ -163,7 +159,7 @@ app.get("/doctors/:idDoctor", async (req, res) => {
     });
 
     if (!doctor) {
-      sendError(res, "Eroare la gasirea doctorului", 400);
+      sendError(res, "Error finding the doctor", 400);
     }
 
     return sendSucces(
@@ -188,7 +184,7 @@ app.post("/doctors/:idDoctor/patients", async (req, res) => {
     if (!name || !cnp || cnp.length !== 13) {
       return sendError(
         res,
-        "Numele este obligatoriu iar CNP-ul trebuie sa fie de 13 cifre",
+        "The name is required, and the CNP must be 13 digits long",
         400
       ); //Verificare input
     }
@@ -196,7 +192,7 @@ app.post("/doctors/:idDoctor/patients", async (req, res) => {
     const existent = await db.patients.findUnique({ where: { cnp: cnp } });
 
     if (existent) {
-      return sendError(res, "CNP-ul este asociat altui nume", 400);
+      return sendError(res, "The CNP is associated with another name", 400);
     }
 
     const patient = await db.patients.create({
@@ -220,10 +216,10 @@ app.post("/doctors/:idDoctor/patients", async (req, res) => {
 app.put("/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
   try {
     const { idPatient } = req.params;
-    const { allergies } = req.body;
+    const { alergies } = req.body;
 
     if (!alergies) {
-      return sendError(res, "Nu sunt introduse update-uri", 400);
+      return sendError(res, "No updates have been entered", 400);
     }
 
     const patientUpdated = await db.patients.update({
@@ -244,11 +240,12 @@ app.put("/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
 });
 
 app.post("/patients/login", async (req, res) => {
+  //aici as schimba functii cand ajung la implementarea ei cu /patients/:idPatients si query pentru nume si cnp
   try {
     const { name, cnp } = req.body;
 
     if (cnp.length !== 13 || !cnp) {
-      return sendError(res, "CNP-ul trebuie sa fie din 13 cifre", 400);
+      return sendError(res, "The CNP must be 13 digits long", 400);
     }
 
     const patient = await db.patients.findUnique({
@@ -259,13 +256,13 @@ app.post("/patients/login", async (req, res) => {
     if (!patient) {
       return sendError(
         res,
-        "CNP-ul nu este bun sau nu exista pacient asociat lui",
+        "The CNP is invalid or there is no patient associated with it",
         400
       );
     }
 
     if (patient.name !== name) {
-      return sendError(res, "Numele nu se potriveste cu CNP-ul", 400);
+      return sendError(res, "The name does not match the CNP", 400);
     }
 
     return sendSucces(
@@ -294,13 +291,13 @@ app.delete("/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
     });
 
     if (!patient) {
-      return sendError(res, "Pacientul nu exista", 404);
+      return sendError(res, "The patient does not exist", 404);
     }
 
     if (patient.doctorId !== idDoctor) {
       return sendError(
         res,
-        "Pacientul nu apartine de acest doctor prin urmare nu poate fi sters",
+        "The patient does not belong to this doctor, therefore cannot be deleted",
         400
       );
     }
@@ -327,7 +324,7 @@ app.delete("/doctors/:idDoctor", async (req, res) => {
     });
 
     if (!doctor) {
-      return sendError(res, "Doctorul nu s-a gasit", 404);
+      return sendError(res, "The doctor was not found", 404);
     }
 
     const deletedDoctor = await db.doctor.delete({

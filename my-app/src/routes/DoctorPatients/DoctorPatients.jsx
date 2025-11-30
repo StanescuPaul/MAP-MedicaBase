@@ -3,6 +3,7 @@ import { KDoctor } from "../../components/doctorCard/KDoctor";
 import { useState, useEffect } from "react";
 import { KPatient } from "../../components/patientCard/KPatient";
 import { KForm } from "../../components/addButton/KForm";
+import { useNavigate } from "react-router-dom";
 import styles from "./DoctorPatients.module.css";
 
 export function DoctorPatients() {
@@ -13,6 +14,7 @@ export function DoctorPatients() {
   const [allert, setAllert] = useState(null);
   const [visible, setVisible] = useState("Visible"); //pentru a seta vizibilitatea butonului de add
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const navigate = useNavigate();
 
   const fetchPatientsData = async () => {
     //functia este creata pentru a putea trimite functia ca prop la KForm ca la finalul adaugarii unui pacient in form sa faca o rerandare a listei de pacienti pentru a se actualiza lista in timp real
@@ -70,7 +72,7 @@ export function DoctorPatients() {
           setAllert(null);
           setCnp("");
         } else {
-          setAllert(dataPatient.message || "Eroare necunoscuta la cautare");
+          setAllert(dataPatient.message || "Unknown error");
           setCnp("");
         }
         if (cnp.length === 13) {
@@ -80,7 +82,7 @@ export function DoctorPatients() {
           setVisible("Visible");
         }
       } else {
-        setAllert("CNP trebuie sa contina 13 cifre");
+        setAllert("The CNP must contain 13 digits");
         setCnp("");
       }
     } catch (err) {
@@ -94,6 +96,10 @@ export function DoctorPatients() {
   }
   function handleCloseForm() {
     setIsFormOpen(false);
+  }
+
+  function handleOnKPatient(patientData) {
+    navigate(`/doctors/${idDoctor}/patients/${patientData.id}`);
   }
 
   return (
@@ -129,6 +135,7 @@ export function DoctorPatients() {
           {patientsData.map((patientData, index) => (
             <KPatient
               key={patientData.id}
+              onClick={() => handleOnKPatient(patientData)} //pentru a nu se apela la randarea cardului doar la onClick
               name={patientData.name}
               cnp={patientData.cnp}
               number={index + 1} // index da numarul de mapari realizate e mai eficient decat o variabila let

@@ -130,7 +130,7 @@ export function KForm({ close, idDoctor, onChangeForm }) {
         )}
         <input
           className={styles.inputStyle}
-          placeholder="Nume"
+          placeholder="Name"
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
         />
@@ -148,7 +148,7 @@ export function KForm({ close, idDoctor, onChangeForm }) {
             <div key={allergyObject.id} className={styles.inpAllergiLable}>
               <input
                 className={styles.inputStyle}
-                placeholder={`Alergia ${index + 1}`}
+                placeholder={`Allergy ${index + 1}`}
                 value={allergyObject.value} //avem obiectul allergyObject cu id si
                 onChange={(e) =>
                   handleAllergiChange(allergyObject.id, e.target.value)
@@ -167,7 +167,7 @@ export function KForm({ close, idDoctor, onChangeForm }) {
         <div className={styles.btnLable}>
           <button className={styles.addInpStyle} onClick={handleOnAddAlergi}>
             {/*aici se creaza noile inputuri si se face obiectul allergyObject pe care il ia map-ul de sus*/}
-            ADD Allergi
+            ADD Allergy
           </button>
           <button
             className={styles.addPatientStyle}

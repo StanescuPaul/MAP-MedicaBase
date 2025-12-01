@@ -216,17 +216,19 @@ app.post("/doctors/:idDoctor/patients", async (req, res) => {
 app.put("/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
   try {
     const { idPatient } = req.params;
-    const { alergies } = req.body;
+    const { newAlergies } = req.body;
 
-    if (!alergies) {
+    if (!newAlergies) {
       return sendError(res, "No updates have been entered", 400);
     }
+
+    const allergiesToCreate = newAlergies.map((name) => ({ name: name }));
 
     const patientUpdated = await db.patients.update({
       where: { id: idPatient },
       data: {
         alergies: {
-          create: alergies.map((alergie) => ({ name: alergie.name })),
+          create: allergiesToCreate,
         },
       },
       include: { alergies: true },

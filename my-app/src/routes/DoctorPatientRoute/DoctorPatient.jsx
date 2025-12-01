@@ -2,6 +2,7 @@ import styles from "./DoctorPatient.module.css";
 import { useEffect, useState } from "react";
 import { KDoctor } from "../../components/doctorCard/KDoctor";
 import { useParams } from "react-router-dom";
+import { KFormUpdate } from "../../components/addButton/KFormUpdate";
 
 export function DoctorPatient() {
   const [patientData, setPatientData] = useState({
@@ -11,9 +12,11 @@ export function DoctorPatient() {
     createAt: "",
     updateAt: "",
   });
-  const [doctorName, setDoctorName] = useState();
+  const [doctorName, setDoctorName] = useState("");
   const { idDoctor, idPatient } = useParams();
+  const [visible, setVisible] = useState(false);
 
+  //fetch date doctor si pacient
   useEffect(() => {
     const data = async () => {
       try {
@@ -34,6 +37,14 @@ export function DoctorPatient() {
     };
     data();
   }, [idPatient, idDoctor]);
+
+  //inchidere deschidere formular de update
+  function handleOnAdd() {
+    setVisible(true);
+  }
+  function handleOnClose() {
+    setVisible(false);
+  }
 
   return (
     <div className={styles.container}>
@@ -72,8 +83,13 @@ export function DoctorPatient() {
                 {alergy.name},
               </p>
             ))}
-            <button className={styles.addStyle}>+</button>
+            <button className={styles.addStyle} onClick={handleOnAdd}>
+              +
+            </button>
           </div>
+          {visible && (
+            <KFormUpdate close={handleOnClose} patient={patientData} />
+          )}
           <button className={styles.deleteStyle}>Delete patient</button>
         </div>
       </div>

@@ -1,0 +1,109 @@
+.container {
+  background-color: rgba(0, 0, 0, 0.6);
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  z-index: 1000px;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.formStyle {
+  background-color: rgb(87, 110, 109);
+  display: flex;
+  height: 650px;
+  width: 450px;
+  border-radius: 20px;
+  box-shadow: 10px 10px 20px #343434;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.inputLable {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.inputStyle {
+  width: 250px;
+  height: 30px;
+  border-radius: 20px;
+  border: 2px solid black;
+  display: flex;
+  text-align: center;
+  box-shadow: 2px 2px 3px #363636;
+}
+.inputStyle:hover {
+  background-color: rgb(204, 204, 204);
+  transform: translateY(-1px);
+  box-shadow: 2px 2px 4px #363636;
+}
+.addStyle {
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  border-radius: 999px;
+  border: 1px solid black;
+  box-shadow: 2px 2px 3px #363636;
+}
+.addStyle:hover {
+  background-color: rgb(87, 255, 87);
+  transform: translateY(-1px);
+  box-shadow: 2px 2px 4px #363636;
+}
+.updateStyle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 50px;
+  border-radius: 20px;
+  box-shadow: 2px 2px 3px #363636;
+}
+.updateStyle:hover {
+  background-color: rgb(87, 255, 87);
+  transform: translateY(-1px);
+  box-shadow: 2px 2px 4px #363636;
+}
+.closeStyle {
+  display: flex;
+  width: 30px;
+  height: 30px;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 2px 2px 3px #363636;
+  border-radius: 999px;
+  border: 1px solid black;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+.closeStyle:hover {
+  background-color: red;
+  color: white;
+  box-shadow: 2px 2px 4px #363636;
+  transform: translateY(-1px);
+}
+.deleteStyle {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 999px;
+  box-shadow: 2px 2px 3px #363636;
+  border: 1px solid black;
+}
+.deleteStyle:hover {
+  background-color: red;
+  transform: translateY(-1px);
+  box-shadow: 2px 2px 4px #363636;
+  color: white;
+}

@@ -51,6 +51,8 @@
   flex-direction: row;
   align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 .addStyle {
   display: flex;

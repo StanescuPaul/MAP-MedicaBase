@@ -89,7 +89,7 @@ export function KForm({ close, idDoctor, onChangeForm }) {
       const data = await rawResponse.json();
 
       if (rawResponse.ok) {
-        setAlert({ type: data.type, message: "Pacient adaugat cu succes" });
+        setAlert({ type: data.type, message: "Patient added successfully" });
         setForm({
           name: "",
           cnp: "",
@@ -99,7 +99,7 @@ export function KForm({ close, idDoctor, onChangeForm }) {
       } else {
         setAlert({
           type: data.type,
-          message: data.message || "Eroare la adaugarea pacientului",
+          message: data.message || "Error adding the patient",
         });
         setForm({
           ...form, //setam asa pentru ca daca am pune doar cnp: "" schimbam toata forma obiectului form setam name: undefined in loc de "" si allergies la fel
@@ -107,7 +107,7 @@ export function KForm({ close, idDoctor, onChangeForm }) {
         });
       }
     } catch (err) {
-      setAlert({ type: "error", message: "Eroare la conectarea la server" });
+      setAlert({ type: "error", message: "Error connecting to the server" });
       setForm({
         ...form,
         cnp: "",

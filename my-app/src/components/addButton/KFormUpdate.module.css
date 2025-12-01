@@ -37,6 +37,7 @@
   display: flex;
   text-align: center;
   box-shadow: 2px 2px 3px #363636;
+  margin-left: 30px;
 }
 .inputStyle:hover {
   background-color: rgb(204, 204, 204);
@@ -66,6 +67,9 @@
   height: 50px;
   border-radius: 20px;
   box-shadow: 2px 2px 3px #363636;
+  bottom: 10px;
+  position: absolute;
+  right: 10px;
 }
 .updateStyle:hover {
   background-color: rgb(87, 255, 87);
@@ -106,4 +110,27 @@
   transform: translateY(-1px);
   box-shadow: 2px 2px 4px #363636;
   color: white;
+}
+.patientDataStyle {
+  margin: 0px;
+  padding: 0px;
+  color: white;
+  font-size: 20px;
+}
+.patientDataLable {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.alertStyle {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0px;
+}
+.error {
+  color: red;
+}
+.success {
+  color: #00ff22;
 }

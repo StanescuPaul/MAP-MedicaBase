@@ -46,6 +46,21 @@ export function DoctorPatient() {
     setVisible(false);
   }
 
+  //functie de fetch pentru rerandare
+  const fetchDataPatient = async () => {
+    try {
+      const rawData = await fetch(
+        `http://localhost:5000/doctors/${idDoctor}/patients/${idPatient}`
+      );
+
+      const data = await rawData.json();
+
+      setPatientData(data.data);
+    } catch (err) {
+      console.log("Eroare la conectare la server");
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.doctorView}>
@@ -88,7 +103,12 @@ export function DoctorPatient() {
             </button>
           </div>
           {visible && (
-            <KFormUpdate close={handleOnClose} patient={patientData} />
+            <KFormUpdate
+              close={handleOnClose}
+              patient={patientData}
+              idDoctor={idDoctor}
+              update={fetchDataPatient}
+            />
           )}
           <button className={styles.deleteStyle}>Delete patient</button>
         </div>

@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import cors from "cors"; // nu mergea conexiunea cu react fara
 import { sendSucces, sendError } from "./helper/response.js"; //am creeat 2 functii separate pentru a fi mai usor de gestionat erorile si succes-urile si pentru a fi mai consistent cu ele si mai usor de comunicat cu forntend-ul
 import "dotenv/config"; //cu noile update-uri in loc de url din schema.prisma
+import { create } from "domain";
 
 const app = express();
 const db = new PrismaClient();
@@ -216,21 +217,40 @@ app.post("/doctors/:idDoctor/patients", async (req, res) => {
 app.put("/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
   try {
     const { idPatient } = req.params;
-    const { newAlergies } = req.body;
+    const { newAlergies, newName, newCnp } = req.body;
 
-    if (!newAlergies) {
-      return sendError(res, "No updates have been entered", 400);
+    if (newCnp) {
+      const uniqueCnp = await db.patients.findUnique({
+        where: { cnp: newCnp },
+      });
+      if (uniqueCnp && uniqueCnp.id !== idPatient) {
+        return sendError(res, "There is a patient with this CNP", 400);
+      }
     }
 
-    const allergiesToCreate = newAlergies.map((name) => ({ name: name }));
+    if (newCnp && newCnp.length !== 13) {
+      return sendError(res, "CNP must contain 13 characters", 400);
+    }
+
+    const allergiesToCreate = newAlergies.map((name) => ({ name: name })); //mapam prin alergiile primite din front-end care este un array pentru a-l convertii in obiect cu proprietatea name: care este formatul acceptat de prisma
+
+    const updateData = {
+      updateAt: new Date(),
+      alergies: {
+        create: allergiesToCreate,
+      },
+    };
+
+    if (newName) {
+      updateData.name = newName;
+    }
+    if (newCnp) {
+      updateData.cnp = newCnp;
+    }
 
     const patientUpdated = await db.patients.update({
       where: { id: idPatient },
-      data: {
-        alergies: {
-          create: allergiesToCreate,
-        },
-      },
+      data: updateData,
       include: { alergies: true },
     });
 

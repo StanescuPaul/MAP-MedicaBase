@@ -29,6 +29,7 @@
   flex-direction: column;
   gap: 60px;
   align-items: center;
+  position: relative;
 }
 .textStyle {
   color: white;
@@ -58,11 +59,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 30px;
+  width: 60px;
   height: 30px;
   border-radius: 999px;
   border: 1px solid #000000;
   box-shadow: 2px 2px 4px #363636;
+  position: absolute;
+  top: 10px;
+  left: 10px;
 }
 .addStyle:hover {
   background-color: #00ff22;

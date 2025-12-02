@@ -122,6 +122,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  gap: 5px;
 }
 .alertStyle {
   font-size: 15px;
@@ -133,4 +134,37 @@
 }
 .success {
   color: #00ff22;
+}
+.changeLable {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.changeStyle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 10px;
+  width: 80px;
+  height: 30px;
+  box-shadow: 2px 2px 3px #363636;
+}
+.changeStyle:hover {
+  background-color: rgb(87, 255, 87);
+  transform: translateY(-1px);
+  box-shadow: 2px 2px 4px #363636;
+}
+.inputSaveStyle {
+  display: flex;
+  text-align: center;
+  width: 200px;
+  height: 25px;
+  border-radius: 10px;
+  border: 1px solid black;
+}
+.inputSaveStyle:hover {
+  background-color: rgb(224, 224, 224);
+  transform: translateY(-1px);
 }

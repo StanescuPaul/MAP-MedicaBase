@@ -3,10 +3,16 @@ import { useEffect, useState } from "react";
 
 export function KFormUpdate({ close, patient, idDoctor, update }) {
   const uniqueId = () => Date.now() + Math.random();
-
+  const [newData, setNewData] = useState({
+    newName: patient.name,
+    newCnp: patient.cnp,
+    newAllergies: [],
+  });
   //alergii noi
   const [newAllergies, setNewAllergies] = useState([]);
   const [alert, setAlert] = useState(null);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [isEditingCnp, setIsEditingCnp] = useState(false);
 
   //functie pentru adaugare inputuri
   const handleOnAddAlergi = () => {
@@ -49,6 +55,24 @@ export function KFormUpdate({ close, patient, idDoctor, update }) {
     );
   };
 
+  //functie pentru editare nume si cnp
+  const handleOnEditingName = () => {
+    setIsEditingName(true);
+  };
+  const handleOnSaveName = () => {
+    setIsEditingName(false);
+  };
+  const handleOnEditingCnp = () => {
+    setIsEditingCnp(true);
+  };
+  const handleOnSaveCnp = () => {
+    if (newData.newCnp.length !== 13) {
+      setAlert({ type: "error", message: "CNP must have 13 characters" });
+      return;
+    }
+    setIsEditingCnp(false);
+  };
+
   //functie de update pentru pacient
   const handleOnUpdate = async () => {
     //transform doar in value alergia scapam de id
@@ -57,8 +81,23 @@ export function KFormUpdate({ close, patient, idDoctor, update }) {
     );
 
     const finalNewAllergies = rawNewAllergies.filter(
-      (alergy) => alergy && alergy.trim() !== ""
+      (alergy) => alergy && alergy.trim() !== "" // verificam daca exista alergia sau e input gol si daca are spatii la inceput sau final
     );
+
+    if (
+      newData.newName === patient.name &&
+      newData.newCnp === patient.cnp &&
+      finalNewAllergies.length === 0
+    ) {
+      setAlert({ type: "error", message: "There is no update" }); //handle in caz ca nu sunt introduse schimbari
+      return;
+    }
+
+    const finalForm = {
+      newName: newData.newName,
+      newCnp: newData.newCnp,
+      newAlergies: finalNewAllergies,
+    };
 
     try {
       const rawResponse = await fetch(
@@ -68,7 +107,7 @@ export function KFormUpdate({ close, patient, idDoctor, update }) {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ newAlergies: finalNewAllergies }),
+          body: JSON.stringify(finalForm),
         }
       );
 
@@ -95,14 +134,59 @@ export function KFormUpdate({ close, patient, idDoctor, update }) {
         <button className={styles.closeStyle} onClick={close}>
           X
         </button>
-        <div className={styles.patientDataLable}>
-          <p className={styles.patientDataStyle}>Name: {patient.name}</p>
-          <p className={styles.patientDataStyle}>CNP: {patient.cnp}</p>
-        </div>
         {alert && (
           <p className={`${styles.alertStyle} ${styles[alert.type]}`}>
             {alert.message}
           </p>
+        )}
+        <div className={styles.patientDataLable}>
+          {isEditingName ? (
+            <div className={styles.changeLable}>
+              <input
+                className={styles.inputSaveStyle}
+                placeholder="Name"
+                value={newData.newName}
+                onChange={(e) =>
+                  setNewData({ ...newData, newName: e.target.value })
+                }
+              />
+              <button className={styles.changeStyle} onClick={handleOnSaveName}>
+                Save
+              </button>
+            </div>
+          ) : (
+            <div className={styles.changeLable}>
+              <p className={styles.patientDataStyle}>Name: {newData.newName}</p>
+              <button
+                className={styles.changeStyle}
+                onClick={handleOnEditingName}
+              >
+                Edit
+              </button>
+            </div>
+          )}
+        </div>
+        {isEditingCnp ? (
+          <div className={styles.changeLable}>
+            <input
+              className={styles.inputSaveStyle}
+              placeholder="CNP"
+              value={newData.newCnp}
+              onChange={(e) =>
+                setNewData({ ...newData, newCnp: e.target.value })
+              }
+            />
+            <button className={styles.changeStyle} onClick={handleOnSaveCnp}>
+              Save
+            </button>
+          </div>
+        ) : (
+          <div className={styles.changeLable}>
+            <p className={styles.patientDataStyle}>CNP: {newData.newCnp}</p>
+            <button className={styles.changeStyle} onClick={handleOnEditingCnp}>
+              Edit
+            </button>
+          </div>
         )}
         {newAllergies.map((allergyObject, index) => (
           <div key={allergyObject.id} className={styles.inputLable}>

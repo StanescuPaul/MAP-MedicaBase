@@ -98,10 +98,10 @@ export function DoctorPatient() {
                 {alergy.name},
               </p>
             ))}
-            <button className={styles.addStyle} onClick={handleOnAdd}>
-              +
-            </button>
           </div>
+          <button className={styles.addStyle} onClick={handleOnAdd}>
+            Edit
+          </button>
           {visible && (
             <KFormUpdate
               close={handleOnClose}

@@ -327,7 +327,7 @@ app.delete("/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
     const deletedPatient = await db.patients.delete({
       where: { id: idPatient },
     });
-    return sendSucces(res, { deletedPatient, deleteAlergies }, 200);
+    return sendSucces(res, { deletedPatient }, 200);
   } catch (error) {
     console.log(
       "ERROR on /doctor/:idDoctor/patients/:idPatient DELETE: ",

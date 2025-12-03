@@ -86,3 +86,76 @@
   color: white;
   transform: translateY(-1px);
 }
+.alertStyle {
+  font-size: 15px;
+  font-weight: 400;
+}
+.error {
+  color: red;
+}
+.success {
+  color: #27ff13;
+}
+.deleteAskStyle {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+}
+.deleteAskLable {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: rgb(87, 110, 109);
+  box-shadow: 2px 2px 4px #363636;
+  width: 500px;
+  height: 200px;
+  border-radius: 20px;
+}
+.deleteMessage {
+  color: white;
+  font-size: 20px;
+  font-weight: 400px;
+}
+.btnLableDelete {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.cancelStyle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  box-shadow: 2px 2px 4px #363636;
+  border-radius: 20px;
+  width: 80px;
+  height: 30px;
+}
+.cancelStyle:hover {
+  background-color: red;
+  color: white;
+  transform: translateY(-1px);
+}
+.yesStyle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 30px;
+  border: 1px solid black;
+  border-radius: 20px;
+  box-shadow: 2px 2px 4px #363636;
+}
+.yesStyle:hover {
+  background-color: #0dff00;
+  transform: translateY(-1px);
+}

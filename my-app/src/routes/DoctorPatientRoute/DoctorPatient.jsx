@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import { KDoctor } from "../../components/doctorCard/KDoctor";
 import { useParams } from "react-router-dom";
 import { KFormUpdate } from "../../components/addButton/KFormUpdate";
+import { useNavigate } from "react-router-dom";
 
 export function DoctorPatient() {
+  const navigate = useNavigate();
   const [patientData, setPatientData] = useState({
     name: "",
     cnp: "",
@@ -15,6 +17,8 @@ export function DoctorPatient() {
   const [doctorName, setDoctorName] = useState("");
   const { idDoctor, idPatient } = useParams();
   const [visible, setVisible] = useState(false);
+  const [alert, setAlert] = useState(null);
+  const [visibleDelete, setVisibleDelete] = useState(false);
 
   //fetch date doctor si pacient
   useEffect(() => {
@@ -61,6 +65,44 @@ export function DoctorPatient() {
     }
   };
 
+  const handleOnDelete = () => {
+    setVisibleDelete(true);
+  };
+  const handleOnCancelDelete = () => {
+    setVisibleDelete(false);
+  };
+
+  //functie pentru a sterge pacient
+  const handleOnOkDelete = async () => {
+    try {
+      const rawResponseDelete = await fetch(
+        `http://localhost:5000/doctors/${idDoctor}/patients/${idPatient}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const responseDelete = await rawResponseDelete.json();
+
+      if (rawResponseDelete.ok) {
+        navigate(`http://localhost:3000/doctors/${idDoctor}/patients`);
+        setAlert({
+          type: responseDelete.type,
+          message: `Patient ${patientData.name} deleted succesfuly`,
+        });
+      } else {
+        setAlert({
+          type: responseDelete.type,
+          message: responseDelete.message,
+        });
+      }
+    } catch (err) {
+      setAlert({ type: "error", message: "Error to delete the patient" });
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.doctorView}>
@@ -68,8 +110,33 @@ export function DoctorPatient() {
         <h2 className={styles.textStyle}>User</h2>
         <KDoctor name={doctorName} />
       </div>
+      {visibleDelete && (
+        <div className={styles.deleteAskStyle}>
+          <div className={styles.deleteAskLable}>
+            <p className={styles.deleteMessage}>
+              Are you sure you want to delete this patient?
+            </p>
+            <div className={styles.btnLableDelete}>
+              <button className={styles.yesStyle} onClick={handleOnOkDelete}>
+                Yes
+              </button>
+              <button
+                className={styles.cancelStyle}
+                onClick={handleOnCancelDelete}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className={styles.patientView}>
         <div className={styles.patientDataView}>
+          {alert && (
+            <p className={`${styles.alertStyle} ${styles[alert.type]}`}>
+              {alert.message}
+            </p>
+          )}
           <div className={styles.alignData}>
             <p className={styles.prefixStyle}>Name:</p>
             <p className={styles.dataStyle}>{patientData.name}</p>
@@ -110,7 +177,9 @@ export function DoctorPatient() {
               update={fetchDataPatient}
             />
           )}
-          <button className={styles.deleteStyle}>Delete patient</button>
+          <button className={styles.deleteStyle} onClick={handleOnDelete}>
+            Delete patient
+          </button>
         </div>
       </div>
     </div>

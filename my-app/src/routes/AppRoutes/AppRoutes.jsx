@@ -4,6 +4,7 @@ import { Home } from "../Home/Home";
 import { Register } from "../Register/Register";
 import { DoctorPatients } from "../DoctorPatients/DoctorPatients";
 import { DoctorPatient } from "../DoctorPatientRoute/DoctorPatient";
+import { KDoctorProfile } from "../DoctorProfile/DoctorProfile";
 
 export function AppRoutes() {
   return (
@@ -17,6 +18,7 @@ export function AppRoutes() {
         path="/doctors/:idDoctor/patients/:idPatient"
         element={<DoctorPatient />}
       />
+      <Route path="/doctors/:idDoctor" element={<KDoctorProfile />} />
     </Routes>
   );
 }

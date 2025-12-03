@@ -26,7 +26,7 @@ export function DoctorPatients() {
       const patientsInfo = await rawPatientsData.json();
       setPatientsData(patientsInfo.data);
     } catch (err) {
-      console.log("Eroare la rerandarea pacientilor");
+      setAllert("Error rendering the patients");
     }
   };
 
@@ -102,12 +102,16 @@ export function DoctorPatients() {
     navigate(`/doctors/${idDoctor}/patients/${patientData.id}`);
   }
 
+  function handleOnKDoctor() {
+    navigate(`/doctors/${idDoctor}`);
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.kdoctorLable}>
         <h1 className={styles.textStyle}>MedicaBase</h1>
         <h2 className={styles.textStyle}>User</h2>
-        <KDoctor name={doctorName} />
+        <KDoctor name={doctorName} onClick={handleOnKDoctor} />
       </div>
       <div className={styles.continutDreapta}>
         {isFormOpen && (
@@ -132,6 +136,18 @@ export function DoctorPatients() {
           <p className={styles.allertStyle}>{allert}</p>
         </div>
         <div className={styles.kpatientsLable}>
+          <button
+            className={`${styles.addBtnStyle} ${styles[visible]}`}
+            onClick={handleOnAdd} // daca dau click trecem pe true si afisam formularul
+          >
+            {/*pentru a avea butonul de add doar in lista completa*/}
+            <img
+              className={styles.addImgStyle}
+              src={require("../../assets/addBtn.png")}
+              alt="add patient"
+            />
+            <h1 className={styles.textAddStyle}>Add patient</h1>
+          </button>
           {patientsData.map((patientData, index) => (
             <KPatient
               key={patientData.id}
@@ -147,18 +163,6 @@ export function DoctorPatients() {
               // )}
             />
           ))}
-          <button
-            className={`${styles.addBtnStyle} ${styles[visible]}`}
-            onClick={handleOnAdd} // daca dau click trecem pe true si afisam formularul
-          >
-            {/*pentru a avea butonul de add doar in lista completa*/}
-            <img
-              className={styles.addImgStyle}
-              src={require("../../assets/addBtn.png")}
-              alt="add patient"
-            />
-            <h1 className={styles.textAddStyle}>Add patient</h1>
-          </button>
         </div>
       </div>
     </div>

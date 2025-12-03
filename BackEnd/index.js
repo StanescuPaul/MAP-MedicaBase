@@ -157,17 +157,31 @@ app.get("/doctors/:idDoctor", async (req, res) => {
     const { idDoctor } = req.params;
     const doctor = await db.doctor.findUnique({
       where: { id: idDoctor },
+      include: {
+        _count: {
+          //variabila numara ce ii ceri sa selecteze in cazul nostru pacientii
+          select: {
+            patients: true,
+          },
+        },
+      },
     });
 
     if (!doctor) {
       sendError(res, "Error finding the doctor", 400);
     }
 
+    const patientCount = doctor._count ? doctor._count.patients : 0; //daca exista doctor count atunci returnam numarul daca nu 0
+
     return sendSucces(
       res,
       {
         id: doctor.id,
+        userName: doctor.userName,
         name: doctor.name,
+        createAt: doctor.createAt,
+        updateAt: doctor.updatedAt,
+        patientCount: patientCount,
       },
       200
     );

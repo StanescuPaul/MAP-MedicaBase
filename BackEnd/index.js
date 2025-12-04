@@ -4,6 +4,7 @@ import cors from "cors"; // nu mergea conexiunea cu react fara
 import { sendSucces, sendError } from "./helper/response.js"; //am creeat 2 functii separate pentru a fi mai usor de gestionat erorile si succes-urile si pentru a fi mai consistent cu ele si mai usor de comunicat cu forntend-ul
 import "dotenv/config"; //cu noile update-uri in loc de url din schema.prisma
 import { create } from "domain";
+import { sensitiveHeaders } from "http2";
 
 const app = express();
 const db = new PrismaClient();
@@ -272,6 +273,59 @@ app.put("/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
   } catch (error) {
     console.log("ERROR on /doctor/:idDoctor/patients/:idPatient PUT: ", error);
     sendError(res, "Internal server error", 500);
+  }
+});
+
+app.put("/doctors/:idDoctor", async (req, res) => {
+  try {
+    const { idDoctor } = req.params;
+    const { newUserName, currentPassword, newPassword, newName } = req.body;
+
+    if (!newUserName && !newName && !newPassword) {
+      return sendError(res, "There was no updates", 400);
+    }
+
+    const doctorData = await db.doctor.findUnique({ where: { id: idDoctor } });
+
+    const updateData = {};
+
+    if (newUserName) {
+      const doctorUserNameExist = await db.doctor.findFirst({
+        where: { userName: newUserName },
+      });
+      if (doctorUserNameExist && doctorUserNameExist.id !== idDoctor) {
+        return sendError(res, "This user name is allready taken", 400);
+      }
+      updateData.userName = newUserName;
+    }
+
+    if (newPassword) {
+      if (newPassword.length < 8) {
+        return sendError(res, "Password needs to have at least 8 characters");
+      }
+      if (!currentPassword || currentPassword !== doctorData.password) {
+        return sendError(
+          res,
+          "Current password does not match the password",
+          400
+        );
+      }
+      updateData.password = newPassword;
+    }
+
+    if (newName) {
+      updateData.name = newName;
+    }
+
+    const doctorUpdate = await db.doctor.update({
+      where: { id: idDoctor },
+      data: updateData,
+    });
+
+    sendSucces(res, doctorUpdate, 200);
+  } catch (error) {
+    console.log("ERROR on /doctors/:idDoctors PUT", error);
+    sendError("Internal server error", 500);
   }
 });
 

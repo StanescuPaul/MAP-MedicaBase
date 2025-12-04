@@ -11,7 +11,8 @@ export function KDoctorProfile() {
     patientCount: 0,
   });
   const { idDoctor } = useParams();
-  const [deleteVisible, setDeleteVisible] = useState(false);
+  const [isDeleteVisible, setIsDeleteVisible] = useState(false);
+  const [isEditingVisible, setIsEditingVisible] = useState(false);
 
   useEffect(() => {
     const dataDoctor = async () => {
@@ -36,13 +37,31 @@ export function KDoctorProfile() {
     dataDoctor();
   }, [idDoctor]);
 
-  const handleOnDelete = () => {
-    setDeleteVisible(true);
+  const handleOnShowDelete = () => {
+    setIsDeleteVisible(true);
   };
   const handleOnCancelDelete = () => {
-    setDeleteVisible(false);
+    setIsDeleteVisible(false);
   };
-  const handleOnOkDelete = async () => {};
+  const handleOnOkDelete = async () => {
+    try {
+      const rawResponseDelete = await fetch(
+        `http://localhost:5000/doctors/${idDoctor}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Connect-Type": "application/json",
+          },
+        }
+      );
+
+      const responseDelete = await rawResponseDelete.json();
+
+      console.log(responseDelete.message);
+    } catch (err) {
+      console.log("Error to connect to the server");
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -75,10 +94,10 @@ export function KDoctorProfile() {
             <p className={styles.countStyle}>{doctorData.patientCount}</p>
           </div>
         </div>
-        <button className={styles.deleteBtnStyle} onClick={handleOnDelete}>
+        <button className={styles.deleteBtnStyle} onClick={handleOnShowDelete}>
           Delete
         </button>
-        {deleteVisible && (
+        {isDeleteVisible && (
           <div className={styles.deleteAskStyle}>
             <div className={styles.deleteAskLable}>
               <p className={styles.deleteMessage}>

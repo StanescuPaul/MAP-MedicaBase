@@ -1,6 +1,7 @@
 import styles from "./DoctorProfile.module.css";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { KFormEditDoctor } from "../../components/formEditDoctor/KFormEditDoctor";
 
 export function KDoctorProfile() {
   const [doctorData, setDoctorData] = useState({
@@ -63,6 +64,13 @@ export function KDoctorProfile() {
     }
   };
 
+  const handleOnEditShow = () => {
+    setIsEditingVisible(true);
+  };
+  const handleOnEditClose = () => {
+    setIsEditingVisible(false);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.profileLable}>
@@ -117,7 +125,12 @@ export function KDoctorProfile() {
             </div>
           </div>
         )}
-        <button className={styles.editBtnStyle}>Edit</button>
+        <button className={styles.editBtnStyle} onClick={handleOnEditShow}>
+          Edit
+        </button>
+        {isEditingVisible && (
+          <KFormEditDoctor close={handleOnEditClose} doctorData={doctorData} />
+        )}
       </div>
     </div>
   );

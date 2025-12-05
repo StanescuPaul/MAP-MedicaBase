@@ -1,0 +1,94 @@
+.container {
+  background-color: rgba(0, 0, 0, 0.6);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+}
+.formStyle {
+  background-color: rgb(87, 110, 109);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 500px;
+  height: 600px;
+  border-radius: 20px;
+  box-shadow: 3px 3px 10px #272727;
+  position: relative;
+}
+.closeStyle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 3px 3px 4px #272727;
+  width: 70px;
+  height: 30px;
+  border-radius: 10px;
+  border: 1px solid black;
+}
+.closeStyle:hover {
+  background-color: red;
+  transform: translateY(-1px);
+}
+.dataGroup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 10px;
+}
+.lableData {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+.prefixData {
+  font-size: 20px;
+  font-weight: 200;
+  color: white;
+  margin: 0px;
+}
+.dataStyle {
+  color: white;
+  font-size: 20px;
+  font-weight: 500;
+  margin: 0px;
+}
+.passwordChangeStyle {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  width: 150px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid black;
+  margin-top: 20px;
+}
+.passwordChangeStyle:hover {
+  background-color: #adadad;
+  transform: translateY(-1px);
+}
+.editStyle {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  width: 60px;
+  height: 30px;
+  border-radius: 10px;
+  border: 1px solid black;
+  margin-left: 10px;
+}
+.editStyle:hover {
+  background-color: #adadad;
+  transform: translateY(-1px);
+}

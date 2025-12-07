@@ -298,11 +298,7 @@ app.put("/doctors/:idDoctor", async (req, res) => {
         return sendError(res, "Password needs to have at least 8 characters");
       }
       if (!currentPassword || currentPassword !== doctorData.password) {
-        return sendError(
-          res,
-          "Current password does not match the password",
-          400
-        );
+        return sendError(res, "The current password is not correct", 400);
       }
       updateData.password = newPassword;
     }
@@ -328,6 +324,10 @@ app.post("/patients/login", async (req, res) => {
   try {
     const { name, cnp } = req.body;
 
+    if (!name) {
+      return sendError(res, "The name is required", 400);
+    }
+
     if (cnp.length !== 13 || !cnp) {
       return sendError(res, "The CNP must be 13 digits long", 400);
     }
@@ -338,11 +338,7 @@ app.post("/patients/login", async (req, res) => {
     });
 
     if (!patient) {
-      return sendError(
-        res,
-        "The CNP is invalid or there is no patient associated with it",
-        400
-      );
+      return sendError(res, "The CNP is invalid", 400);
     }
 
     if (patient.name !== name) {

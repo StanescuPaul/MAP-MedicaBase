@@ -289,13 +289,7 @@ app.put("/doctors/:idDoctor", async (req, res) => {
 
     const updateData = {};
 
-    if (newUserName) {
-      const doctorUserNameExist = await db.doctor.findFirst({
-        where: { userName: newUserName },
-      });
-      if (doctorUserNameExist && doctorUserNameExist.id !== idDoctor) {
-        return sendError(res, "This user name is allready taken", 400);
-      }
+    if (newUserName && newUserName !== doctorData.userName) {
       updateData.userName = newUserName;
     }
 
@@ -325,7 +319,7 @@ app.put("/doctors/:idDoctor", async (req, res) => {
     sendSucces(res, doctorUpdate, 200);
   } catch (error) {
     console.log("ERROR on /doctors/:idDoctors PUT", error);
-    sendError("Internal server error", 500);
+    sendError(res, "Internal server error", 500);
   }
 });
 

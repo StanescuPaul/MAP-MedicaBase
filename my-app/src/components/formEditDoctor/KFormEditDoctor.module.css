@@ -30,13 +30,14 @@
   align-items: center;
   box-shadow: 3px 3px 4px #272727;
   width: 70px;
-  height: 30px;
-  border-radius: 10px;
+  height: 40px;
+  border-radius: 20px;
   border: 1px solid black;
 }
 .closeStyle:hover {
   background-color: red;
   transform: translateY(-1px);
+  color: white;
 }
 .dataGroup {
   display: flex;
@@ -70,9 +71,10 @@
   align-items: center;
   width: 150px;
   height: 40px;
-  border-radius: 10px;
+  border-radius: 20px;
   border: 1px solid black;
   margin-top: 20px;
+  box-shadow: 3px 3px 4px #272727;
 }
 .passwordChangeStyle:hover {
   background-color: #adadad;
@@ -84,11 +86,78 @@
   align-items: center;
   width: 60px;
   height: 30px;
-  border-radius: 10px;
+  border-radius: 20px;
   border: 1px solid black;
   margin-left: 10px;
+  box-shadow: 3px 3px 4px #272727;
 }
 .editStyle:hover {
   background-color: #adadad;
   transform: translateY(-1px);
+}
+.inputStyle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  height: 25px;
+  border-radius: 20px;
+  border: 1px solid black;
+  text-align: center;
+  box-shadow: 3px 3px 4px #272727;
+}
+.inputStyle:hover {
+  background-color: #dadada;
+  transform: translateY(-1px);
+}
+.inputPasswordLable {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+.cancelPasswordStyle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70px;
+  height: 40px;
+  border-radius: 20px;
+  border: 1px solid black;
+  box-shadow: 3px 3px 4px #272727;
+}
+.cancelPasswordStyle:hover {
+  background-color: red;
+  transform: translateY(-1px);
+  color: white;
+}
+.updateButtonStyle {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 3px 3px 4px #272727;
+  width: 70px;
+  height: 40px;
+  border-radius: 20px;
+  border: 1px solid black;
+}
+.updateButtonStyle:hover {
+  background-color: #73ff88;
+  transform: translateY(-1px);
+}
+.alertStyle {
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+}
+.error {
+  color: red;
+}
+.success {
+  color: #41ff5d;
 }

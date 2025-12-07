@@ -114,7 +114,7 @@ export function KFormUpdate({ close, patient, idDoctor, update }) {
       const response = await rawResponse.json();
 
       if (rawResponse.ok) {
-        setAlert({ type: "success", message: "Update succesfuly" });
+        setAlert({ type: "success", message: "Update succesfully" });
         setNewAllergies([]);
         update();
       } else {

@@ -1,9 +1,14 @@
 import styles from "./DoctorProfile.module.css";
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { KFormEditDoctor } from "../../components/formEditDoctor/KFormEditDoctor";
+import { useNavigate } from "react-router-dom";
 
 export function KDoctorProfile() {
+  const navigate = useNavigate();
+  const { idDoctor } = useParams();
+  const [isDeleteVisible, setIsDeleteVisible] = useState(false);
+  const [isEditingVisible, setIsEditingVisible] = useState(false);
   const [doctorData, setDoctorData] = useState({
     name: "",
     userName: "",
@@ -11,32 +16,30 @@ export function KDoctorProfile() {
     updateAt: "",
     patientCount: 0,
   });
-  const { idDoctor } = useParams();
-  const [isDeleteVisible, setIsDeleteVisible] = useState(false);
-  const [isEditingVisible, setIsEditingVisible] = useState(false);
+
+  const fetchDataDoctor = useCallback(async () => {
+    try {
+      const rawDataDotor = await fetch(
+        `http://localhost:5000/doctors/${idDoctor}`
+      );
+
+      const dataDoctor = await rawDataDotor.json();
+
+      setDoctorData({
+        name: dataDoctor.data.name,
+        userName: dataDoctor.data.userName,
+        createAt: dataDoctor.data.createAt,
+        updateAt: dataDoctor.data.updateAt,
+        patientCount: dataDoctor.data.patientCount,
+      });
+    } catch (err) {
+      console.log("Error conecting to the server");
+    }
+  }, [idDoctor]);
 
   useEffect(() => {
-    const dataDoctor = async () => {
-      try {
-        const rawDataDotor = await fetch(
-          `http://localhost:5000/doctors/${idDoctor}`
-        );
-
-        const dataDoctor = await rawDataDotor.json();
-
-        setDoctorData({
-          name: dataDoctor.data.name,
-          userName: dataDoctor.data.userName,
-          createAt: dataDoctor.data.createAt,
-          updateAt: dataDoctor.data.updateAt,
-          patientCount: dataDoctor.data.patientCount,
-        });
-      } catch (err) {
-        console.log("Error conecting to the server");
-      }
-    };
-    dataDoctor();
-  }, [idDoctor]);
+    fetchDataDoctor();
+  }, [idDoctor, fetchDataDoctor]);
 
   const handleOnShowDelete = () => {
     setIsDeleteVisible(true);
@@ -51,12 +54,16 @@ export function KDoctorProfile() {
         {
           method: "DELETE",
           headers: {
-            "Connect-Type": "application/json",
+            "Content-Type": "application/json",
           },
         }
       );
 
       const responseDelete = await rawResponseDelete.json();
+
+      if (rawResponseDelete.ok) {
+        navigate("/");
+      }
 
       console.log(responseDelete.message);
     } catch (err) {
@@ -129,7 +136,12 @@ export function KDoctorProfile() {
           Edit
         </button>
         {isEditingVisible && (
-          <KFormEditDoctor close={handleOnEditClose} doctorData={doctorData} />
+          <KFormEditDoctor
+            close={handleOnEditClose}
+            doctorData={doctorData}
+            idDoctor={idDoctor}
+            callBack={fetchDataDoctor}
+          />
         )}
       </div>
     </div>

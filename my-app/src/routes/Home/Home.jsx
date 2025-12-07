@@ -9,7 +9,9 @@ export function Home() {
         <Link to="/doctors/login">
           <button className={styles.buttonLoginStyle}>Login</button>
         </Link>
-        <button className={styles.buttonPatientStyle}>Patients</button>
+        <Link to="/patients/login">
+          <button className={styles.buttonPatientStyle}>Patients</button>
+        </Link>
       </div>
     </div>
   );

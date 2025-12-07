@@ -51,6 +51,15 @@ export function KFormEditDoctor({ close, doctorData, idDoctor, callBack }) {
   }, [alert]);
 
   const handleOnUpdateDoctor = async () => {
+    if (
+      doctorUpdateData.newName === doctorData.name &&
+      doctorUpdateData.newUserName === doctorData.userName &&
+      !doctorUpdateData.newPassword
+    ) {
+      setAlert({ type: "error", message: "There is no updates" });
+      return;
+    }
+
     try {
       const rawResponseUpdate = await fetch(
         `http://localhost:5000/doctors/${idDoctor}`,
@@ -66,13 +75,20 @@ export function KFormEditDoctor({ close, doctorData, idDoctor, callBack }) {
       const responseUpdate = await rawResponseUpdate.json();
 
       if (rawResponseUpdate.ok) {
+        if (
+          doctorUpdateData.newPassword &&
+          doctorUpdateData.newPassword === doctorUpdateData.currentPassword
+        ) {
+          setAlert({ type: "error", message: "Password has no changes" });
+          return;
+        }
         setAlert({ type: responseUpdate.type, message: "Update succesfully" });
         callBack();
       } else {
         setAlert({
           type: responseUpdate.type,
           message:
-            rawResponseUpdate.message || "Error updateing the doctor profile",
+            responseUpdate.message || "Error updateing the doctor profile",
         });
         if (doctorUpdateData.newPassword && doctorUpdateData.currentPassword) {
           setDoctorUpdateData({

@@ -2,4 +2,10 @@
   width: 200px;
   height: 30px;
   border-radius: 15px;
+  border: 1px solid black;
+  box-shadow: 3px 3px 4px #5a5a5a;
+}
+.kinputStyle:hover {
+  background-color: #dedede;
+  transform: translateY(-1px);
 }

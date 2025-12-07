@@ -1,17 +1,18 @@
 import { Routes, Route } from "react-router-dom";
-import { Login } from "../Login/Login";
+import { DoctorLogin } from "../DoctorLogin/DoctorLogin";
 import { Home } from "../Home/Home";
-import { Register } from "../Register/Register";
+import { DoctorRegister } from "../DoctorRegister/DoctorRegister";
 import { DoctorPatients } from "../DoctorPatients/DoctorPatients";
 import { DoctorPatient } from "../DoctorPatientRoute/DoctorPatient";
 import { KDoctorProfile } from "../DoctorProfile/DoctorProfile";
+import { PatientLogin } from "../PatientLogin/PatientLogin";
 
 export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/doctors/login" element={<Login />} />
-      <Route path="/doctors/register" element={<Register />} />
+      <Route path="/doctors/login" element={<DoctorLogin />} />
+      <Route path="/doctors/register" element={<DoctorRegister />} />
       <Route path="/doctors/:idDoctor/patients" element={<DoctorPatients />} />
       {/* ruta e cu :idDoctors dar url-ul contine parametrul din login*/}
       <Route
@@ -19,6 +20,7 @@ export function AppRoutes() {
         element={<DoctorPatient />}
       />
       <Route path="/doctors/:idDoctor" element={<KDoctorProfile />} />
+      <Route path="/patients/login" element={<PatientLogin />} />
     </Routes>
   );
 }

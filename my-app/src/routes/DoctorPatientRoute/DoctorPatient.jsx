@@ -103,12 +103,16 @@ export function DoctorPatient() {
     }
   };
 
+  const handleOnKDoctor = () => {
+    navigate(`http://localhost:3000/doctors/${idDoctor}`);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.doctorView}>
         <h1 className={styles.textStyle}>MedicaBase</h1>
         <h2 className={styles.textStyle}>User</h2>
-        <KDoctor name={doctorName} />
+        <KDoctor name={doctorName} onClick={handleOnKDoctor} />
       </div>
       {visibleDelete && (
         <div className={styles.deleteAskStyle}>

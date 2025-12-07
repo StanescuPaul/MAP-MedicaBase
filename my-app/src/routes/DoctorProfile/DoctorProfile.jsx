@@ -63,6 +63,8 @@ export function KDoctorProfile() {
 
       if (rawResponseDelete.ok) {
         navigate("/");
+      } else {
+        console.log("Error deleting the account");
       }
 
       console.log(responseDelete.message);

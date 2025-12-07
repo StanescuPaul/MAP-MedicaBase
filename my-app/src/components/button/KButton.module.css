@@ -6,3 +6,7 @@
   background-color: rgb(87, 110, 109);
   color: white;
 }
+.kbuttonStyle:hover {
+  background-color: rgb(67, 84, 83);
+  transform: translateY(-1px);
+}

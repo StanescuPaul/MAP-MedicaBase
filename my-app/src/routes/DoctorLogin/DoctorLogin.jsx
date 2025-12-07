@@ -1,11 +1,11 @@
 import { Link } from "react-router";
-import styles from "./Login.module.css";
+import styles from "./DoctorLogin.module.css";
 import { useState } from "react";
 import { KButton } from "../../components/button/KButton";
 import { KInput } from "../../components/input/KInput";
 import { useNavigate } from "react-router-dom"; //pentru a putea naviga intr-un if statement
 
-export function Login() {
+export function DoctorLogin() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
     userName: "",

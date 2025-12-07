@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { KButton } from "../../components/button/KButton";
 import { KInput } from "../../components/input/KInput";
-import styles from "./Register.module.css";
+import styles from "./DoctorRegister.module.css";
 
-export function Register() {
+export function DoctorRegister() {
   const [form, setForm] = useState({
     name: "",
     userName: "",

@@ -334,7 +334,6 @@ app.post("/patients/login", async (req, res) => {
 
     const patient = await db.patients.findUnique({
       where: { cnp: cnp },
-      include: { alergies: true },
     });
 
     if (!patient) {
@@ -349,9 +348,9 @@ app.post("/patients/login", async (req, res) => {
       res,
       {
         patient: {
+          id: patient.id,
           name: name,
-          cnp: cnp,
-          alergies: patient.alergies.map((alergie) => ({ name: alergie.name })), // nu vreau sa returnez si idDoctor motive de securitate asa ca creez eu un obiect personalizat cu datele pe care le vreau
+          cnp: cnp, // nu vreau sa returnez si idDoctor motive de securitate asa ca creez eu un obiect personalizat cu datele pe care le vreau
         },
       },
       200

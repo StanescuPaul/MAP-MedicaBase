@@ -356,7 +356,34 @@ app.post("/patients/login", async (req, res) => {
       200
     );
   } catch (error) {
-    console.log("ERROR on /patient/login POST", error);
+    console.log("ERROR on /patients/login POST", error);
+    sendError(res, "Internal server error", 500);
+  }
+});
+
+app.get("/patients/:idPatient", async (req, res) => {
+  try {
+    const { idPatient } = req.params;
+
+    const patientData = await db.patients.findUnique({
+      where: { id: idPatient },
+      include: {
+        doctor: {
+          select: {
+            name: true, //pentru a prelua si numele doctorului
+          },
+        },
+        alergies: true,
+      },
+    });
+
+    if (!patientData) {
+      return sendError(res, "Patient was not found", 404);
+    }
+
+    return sendSucces(res, patientData, 200);
+  } catch (err) {
+    console.log("ERROR on /patients/:idPatient GET", err);
     sendError(res, "Internal server error", 500);
   }
 });

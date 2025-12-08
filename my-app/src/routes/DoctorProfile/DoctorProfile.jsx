@@ -81,6 +81,7 @@ export function KDoctorProfile() {
   };
 
   const handleOnLogOut = () => {
+    localStorage.removeItem("sesionDoctorId"); //stergem token-ul din istoricul local
     navigate("/", { replace: true });
   };
 

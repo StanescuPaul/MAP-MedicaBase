@@ -43,9 +43,10 @@ export function PatientLogin() {
       if (rawResponseLoginPatient.ok) {
         setAlert({
           type: responseLoginPatient.type,
-          message: "Login succesfuly",
+          message: "Login succesfully",
         });
-        navigate(`/patients/${idPatient}`);
+        navigate(`/patients/${idPatient}`, { replace: true });
+        localStorage.setItem("sesionPatientId", idPatient);
       } else {
         setAlert({
           type: responseLoginPatient.type,

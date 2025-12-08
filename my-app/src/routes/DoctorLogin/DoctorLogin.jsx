@@ -33,11 +33,13 @@ export function DoctorLogin() {
             "Conectare realizata cu succes",
         });
         const idDoctor = data.data.doctor.id; // luam id din response-ul de la server pentru a-l injecta in url sa accesam doar pacientii acelui doctor, datele se afla in obiectul data din helper acolo e doctor.id
-        navigate(`/doctors/${idDoctor}/patients`); // folosim navigate in if statement sa ne redirectioneze doar intr-un anumit caz si Link ca sa ne duca un buton pe acea ruta orice ar fi
+        navigate(`/doctors/${idDoctor}/patients`, { replace: true }); // folosim navigate in if statement sa ne redirectioneze doar intr-un anumit caz si Link ca sa ne duca un buton pe acea ruta orice ar fi
         setForm({
+          //replace pentru a inlocui ruta login cu ceea la care navigam sa nu mai avem back button
           userName: "",
           password: "",
         });
+        localStorage.setItem("sesionDoctorId", idDoctor); //folosim token idDoctor
       } else {
         setAllert({ type: data.type, message: data.message });
         setForm({

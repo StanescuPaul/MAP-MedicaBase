@@ -6,6 +6,7 @@ import { DoctorPatients } from "../DoctorPatients/DoctorPatients";
 import { DoctorPatient } from "../DoctorPatientRoute/DoctorPatient";
 import { KDoctorProfile } from "../DoctorProfile/DoctorProfile";
 import { PatientLogin } from "../PatientLogin/PatientLogin";
+import { PatientProfile } from "../PatientProfile/PatientProfile";
 
 export function AppRoutes() {
   return (
@@ -21,6 +22,7 @@ export function AppRoutes() {
       />
       <Route path="/doctors/:idDoctor" element={<KDoctorProfile />} />
       <Route path="/patients/login" element={<PatientLogin />} />
+      <Route path="patients/:idPatient" element={<PatientProfile />} />
     </Routes>
   );
 }

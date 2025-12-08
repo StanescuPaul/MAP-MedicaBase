@@ -62,7 +62,7 @@ export function KDoctorProfile() {
       const responseDelete = await rawResponseDelete.json();
 
       if (rawResponseDelete.ok) {
-        navigate("/");
+        navigate("/", { replace: true });
       } else {
         console.log("Error deleting the account");
       }
@@ -78,6 +78,10 @@ export function KDoctorProfile() {
   };
   const handleOnEditClose = () => {
     setIsEditingVisible(false);
+  };
+
+  const handleOnLogOut = () => {
+    navigate("/", { replace: true });
   };
 
   return (
@@ -145,6 +149,9 @@ export function KDoctorProfile() {
             callBack={fetchDataDoctor}
           />
         )}
+        <button className={styles.logOutStyle} onClick={handleOnLogOut}>
+          Log out
+        </button>
       </div>
     </div>
   );

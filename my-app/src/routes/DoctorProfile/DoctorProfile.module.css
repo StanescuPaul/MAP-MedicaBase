@@ -76,7 +76,7 @@
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 10px;
+  bottom: 10px;
   left: 10px;
   width: 80px;
   height: 30px;
@@ -168,5 +168,22 @@
 }
 .yesStyle:hover {
   background-color: #0dff00;
+  transform: translateY(-1px);
+}
+.logOutStyle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 80px;
+  height: 30px;
+  border-radius: 10px;
+  border: 1px solid black;
+  box-shadow: 2px 2px 4px #343434;
+}
+.logOutStyle:hover {
+  background-color: #8b8b8b;
   transform: translateY(-1px);
 }

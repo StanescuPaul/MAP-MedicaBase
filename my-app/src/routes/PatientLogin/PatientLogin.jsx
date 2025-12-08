@@ -2,8 +2,10 @@ import styles from "./PatientLogin.module.css";
 import { KButton } from "../../components/button/KButton";
 import { KInput } from "../../components/input/KInput";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function PatientLogin() {
+  const navigate = useNavigate();
   const [alert, setAlert] = useState(null);
   const [patientAccount, setPatientAccount] = useState({
     name: "",
@@ -36,11 +38,14 @@ export function PatientLogin() {
 
       const responseLoginPatient = await rawResponseLoginPatient.json();
 
+      const idPatient = responseLoginPatient.data.patient.id;
+
       if (rawResponseLoginPatient.ok) {
         setAlert({
           type: responseLoginPatient.type,
           message: "Login succesfuly",
         });
+        navigate(`/patients/${idPatient}`);
       } else {
         setAlert({
           type: responseLoginPatient.type,

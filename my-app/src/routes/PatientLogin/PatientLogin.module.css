@@ -26,7 +26,7 @@
   top: 100px;
 }
 .alertStyle {
-  font-size: 15px;
+  font-size: 20px;
   margin: 0;
   padding: 0;
 }
@@ -34,5 +34,5 @@
   color: red;
 }
 .success {
-  color: #5bff49;
+  color: #23ff0b;
 }

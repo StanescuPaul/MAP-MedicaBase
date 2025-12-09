@@ -1,8 +1,10 @@
 import styles from "./PatientProfile.module.css";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router";
+import { replace, useParams } from "react-router";
+import { useNavigate } from "react-router";
 
 export function PatientProfile() {
+  const navigate = useNavigate();
   const [patientData, setPatientData] = useState({
     doctorName: "",
     name: "",
@@ -41,39 +43,49 @@ export function PatientProfile() {
     dataPatientFetch();
   }, [idPatient]);
 
+  const handleOnExit = () => {
+    localStorage.removeItem("sesionPatientId");
+    navigate("/", { replace: true });
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.profileStyle}>
-        <div className={styles.dataLable}>
-          <p className={styles.prefixData}>Doctor name:</p>
-          <p className={styles.dataStyle}>{patientData.doctorName}</p>
+        <div className={styles.titleDoctor}>
+          <p className={styles.prefixDataDoctor}>Doctor</p>
+          <p className={styles.dataStyleDoctor}>{patientData.doctorName}</p>
         </div>
-        <div className={styles.dataLable}>
-          <p className={styles.prefixData}>Name:</p>
-          <p className={styles.dataStyle}>{patientData.name}</p>
+        <div className={styles.patientData}>
+          <div className={styles.dataLable}>
+            <p className={styles.prefixData}>Name:</p>
+            <p className={styles.dataStyle}>{patientData.name}</p>
+          </div>
+          <div className={styles.dataLable}>
+            <p className={styles.prefixData}>CNP:</p>
+            <p className={styles.dataStyle}>{patientData.cnp}</p>
+          </div>
+          <div className={styles.dataLable}>
+            <p className={styles.prefixData}>Allergies: </p>
+            {patientData.allergies.map((allergy) => (
+              <p className={styles.dataStyle}>{allergy.name},</p>
+            ))}
+          </div>
+          <div className={styles.dataLable}>
+            <p className={styles.prefixData}>First visit:</p>
+            <p className={styles.dataStyle}>
+              {new Date(patientData.createAt).toLocaleDateString("ro-RO")}
+            </p>
+          </div>
+          <div className={styles.dataLable}>
+            <p className={styles.prefixData}>Last update:</p>
+            <p className={styles.dataStyle}>
+              {new Date(patientData.updateAt).toLocaleDateString("ro-RO")}
+            </p>
+          </div>
         </div>
-        <div className={styles.dataLable}>
-          <p className={styles.prefixData}>CNP:</p>
-          <p className={styles.dataStyle}>{patientData.cnp}</p>
-        </div>
-        <div className={styles.dataLable}>
-          <p className={styles.prefixData}>Allergies: </p>
-          {patientData.allergies.map((allergy) => (
-            <p className={styles.dataStyle}>{allergy.name}</p>
-          ))}
-        </div>
-        <div className={styles.dataLable}>
-          <p className={styles.prefixData}>First visit:</p>
-          <p className={styles.dataStyle}>
-            {new Date(patientData.createAt).toLocaleDateString("ro-RO")}
-          </p>
-        </div>
-        <div className={styles.dataLable}>
-          <p className={styles.prefixData}>Last update:</p>
-          <p className={styles.dataStyle}>
-            {new Date(patientData.updateAt).toLocaleDateString("ro-RO")}
-          </p>
-        </div>
+        <button className={styles.exitStyle} onClick={handleOnExit}>
+          Exit
+        </button>
       </div>
     </div>
   );

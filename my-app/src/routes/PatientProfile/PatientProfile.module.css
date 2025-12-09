@@ -11,4 +11,71 @@
   background-color: rgb(87, 110, 109);
   border-radius: 20px;
   box-shadow: 5px 5px 10px #7d7d7d;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.dataLable {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.prefixData {
+  color: white;
+  font-size: 25px;
+  font-weight: 300;
+  margin: 0;
+}
+.dataStyle {
+  color: white;
+  font-size: 25px;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+}
+.titleDoctor {
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 90px;
+}
+.dataStyleDoctor {
+  color: white;
+  font-size: 30px;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+}
+.prefixDataDoctor {
+  color: white;
+  font-size: 30px;
+  font-weight: 300;
+  margin: 0;
+}
+.patientData {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 30px;
+  margin-top: 100px;
+}
+.exitStyle {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70px;
+  height: 35px;
+  border-radius: 20px;
+  border: 1px solid black;
+}
+.exitStyle:hover {
+  background-color: #ff0000;
+  transform: translateY(-1px);
+  color: white;
 }

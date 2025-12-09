@@ -3,7 +3,7 @@ import { DoctorLogin } from "../DoctorLogin/DoctorLogin";
 import { Home } from "../Home/Home";
 import { DoctorRegister } from "../DoctorRegister/DoctorRegister";
 import { DoctorPatients } from "../DoctorPatients/DoctorPatients";
-import { DoctorPatient } from "../DoctorPatientRoute/DoctorPatient";
+import { DoctorPatient } from "../DoctorPatient/DoctorPatient";
 import { KDoctorProfile } from "../DoctorProfile/DoctorProfile";
 import { PatientLogin } from "../PatientLogin/PatientLogin";
 import { PatientProfile } from "../PatientProfile/PatientProfile";

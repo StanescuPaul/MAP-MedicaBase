@@ -8,7 +8,7 @@ export function KDoctor({ name, onClick }) {
           <p className={styles.titleStyle}>Doctor</p>
           <img
             className={styles.profileImage}
-            src={require("../../assets/Paul.jpg")}
+            src={require("../../assets/user.png")}
             alt="Poza"
           />
         </div>

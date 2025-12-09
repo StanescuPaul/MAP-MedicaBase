@@ -63,6 +63,7 @@ export function KDoctorProfile() {
 
       if (rawResponseDelete.ok) {
         navigate("/", { replace: true });
+        localStorage.removeItem("sesionDoctorId");
       } else {
         console.log("Error deleting the account");
       }
@@ -123,7 +124,7 @@ export function KDoctorProfile() {
           <div className={styles.deleteAskStyle}>
             <div className={styles.deleteAskLable}>
               <p className={styles.deleteMessage}>
-                Are you sure you want to delete the profile?
+                Are you sure you want to delete the account?
               </p>
               <div className={styles.btnLableDelete}>
                 <button className={styles.yesStyle} onClick={handleOnOkDelete}>

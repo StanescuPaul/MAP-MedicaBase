@@ -30,10 +30,10 @@ app.post("/doctors/register", async (req, res) => {
       return sendError(res, "Username is already used", 400); //error are in componenta res,message,status
     }
 
-    if (password.length < 8 || userName.length < 8) {
+    if (password.length < 8) {
       return sendError(
         res,
-        "The password and username must contain at least 8 characters",
+        "The password must contain at least 8 characters",
         400
       );
     }

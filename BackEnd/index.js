@@ -3,16 +3,76 @@ import { PrismaClient } from "@prisma/client";
 import cors from "cors"; // nu mergea conexiunea cu react fara
 import { sendSucces, sendError } from "./helper/response.js"; //am creeat 2 functii separate pentru a fi mai usor de gestionat erorile si succes-urile si pentru a fi mai consistent cu ele si mai usor de comunicat cu forntend-ul
 import "dotenv/config"; //cu noile update-uri in loc de url din schema.prisma
-import { create } from "domain";
-import { sensitiveHeaders } from "http2";
+import multer from "multer"; // pentru gestionare fisiere
+import path from "path"; // pentru a lucra cu cai de fisiere
 
 const app = express();
 const db = new PrismaClient();
 const port = 5000;
 
-app.use(cors()); //am nevoie neaparat de asta pentru a putea accesa serverul
+//imi gaseste calea absoluta unde ruleaza serverul (index.js)
+const __dirname = path.resolve();
 
+app.use(express.static(path.join(__dirname, "public"))); //express.static imi creaza un middleware care permite browser-ului sa acceseze direct directorul cu calea construita in path.join(construieste calea cu separatorul /\ in functie de sistemul de operare)
+app.use(cors()); //am nevoie neaparat de asta pentru a putea accesa serverul
 app.use(express.json());
+
+//in libraria multer, trimitand un fisier prin intermediul multer se creaza un obiect (file) cu anumite proprietati destination(calea destinatie pentru file-ul trimis), filename(numele construit de multer), originalname(numele fisierului original)
+
+//multer.storage spune serverului sa salveze pe hardisk-ul masinii pe care ruleaza serverul poza
+const storageRule = multer.diskStorage({
+  //construim calea destinatie pentru imagine
+  destination: (req, file, cb) => {
+    //cb este functia de callback penttru cand e gata actiunea
+    cb(null, path.join(__dirname, "public/uploads/doctors")); //cb returneaza null pentru nici o eroare si dupa returneaza calea destinatie
+  },
+
+  //functia pentru a crea numele fisierului
+  filename: (req, file, cb) => {
+    const extension = file.originalname.split(".").pop(); // in extension
+
+    const { idDoctor } = req.params;
+
+    cb(null, `${idDoctor}.${extension}`); //construim numele file-ului poza cu id-ul doctorului si extensia preluata mai sus
+  },
+});
+
+//in storageRule declaram regulile pentru multer cum sa stocheze si unde sa stocheze imaginea pentru uploar care e obiectul instantat de ibraria multer
+const upload = multer({
+  //creez instanta multer care foloseste ce contine storage
+  storage: storageRule,
+});
+
+//upload e middleware-ul rutei .single accepta doar un singur file cu filedName ul declarat din frontend single este din multer
+app.post(
+  "/doctors/:idDoctor/upload-photo",
+  upload.single("profilePicture"), //middleware
+  async (req, res) => {
+    try {
+      const { idDoctor } = use.params;
+
+      if (!req.file) {
+        return sendError(res, "No photo was added", 400);
+      }
+
+      const imgUrl = `/uploads/doctors/${req.file.filename}`;
+
+      const updateDoctor = await db.doctor.update({
+        where: { id: idDoctor },
+        data: { profileImgUrl: imgUrl },
+      });
+
+      return sendSucces(
+        res,
+        { message: "Profile picture added succesfuly", data: updateDoctor },
+        200
+      );
+    } catch (err) {
+      console.log("ERROR on /doctors/:idDoctor/upload-photo POST ", err);
+      sendError(res, "Internal server error", 500);
+    }
+  }
+);
 
 app.post("/doctors/register", async (req, res) => {
   try {
@@ -183,6 +243,7 @@ app.get("/doctors/:idDoctor", async (req, res) => {
         createAt: doctor.createAt,
         updateAt: doctor.updatedAt,
         patientCount: patientCount,
+        profileImgUrl: doctor.profileImgUrl,
       },
       200
     );

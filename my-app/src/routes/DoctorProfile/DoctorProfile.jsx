@@ -16,6 +16,7 @@ export function KDoctorProfile() {
     updateAt: "",
     patientCount: 0,
   });
+  const [profileImage, setProfileImage] = useState(null);
 
   const fetchDataDoctor = useCallback(async () => {
     try {
@@ -86,9 +87,46 @@ export function KDoctorProfile() {
     navigate("/", { replace: true });
   };
 
+  const handleOnAddPhoto = async () => {
+    const formData = new FormData(); // pentru fisiere poze etc ai nevoie de FormData pentru tipul de date multipart/form-data
+    formData.append("profilePicture", profileImage); //profilePicture trebuie sa fie mesajul din backend din upload.single
+    //cu formData.apend atribui malorii profilePicture din multer valoarea preluata din frontend
+    try {
+      const rawResponsePhoto = await fetch(
+        `http://localhost:5000/doctors/${idDoctor}/upload-photo`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const responsePhoto = await rawResponsePhoto.json();
+
+      if (rawResponsePhoto.ok) {
+        alert("Upload succesfuly");
+      } else {
+        alert("Error uploading");
+      }
+    } catch (error) {
+      console.log("Error connecting to the server", error);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.profileLable}>
+        <p className={styles.addPhotoText}>Add profile picture</p>
+        <div className={styles.addPhotoLable}>
+          <input
+            type="file"
+            accept="image/*"
+            className={styles.addImageInput}
+            onChange={(e) => setProfileImage(e.target.files[0])}
+          />
+          <button className={styles.addPhotoButton} onClick={handleOnAddPhoto}>
+            +
+          </button>
+        </div>
         <div className={styles.dataLable}>
           <div className={styles.dataGroup}>
             <p className={styles.prefixData}>Name:</p>

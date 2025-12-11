@@ -57,6 +57,7 @@
   align-items: center;
   flex-direction: column;
   gap: 25px;
+  margin-top: 40px;
 }
 .prefixData {
   font-size: 20px;
@@ -186,4 +187,40 @@
 .logOutStyle:hover {
   background-color: #8b8b8b;
   transform: translateY(-1px);
+}
+.addImageInput {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90px;
+}
+.addImageInput:hover {
+  transform: translateY(-1px);
+}
+.addPhotoText {
+  color: white;
+  font-size: 20px;
+  margin: 0px;
+  margin-bottom: 5px;
+  margin-top: 30px;
+}
+.addPhotoButton {
+  width: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  border-radius: 999px;
+  border: 1px solid black;
+}
+.addPhotoButton:hover {
+  background-color: #cccccc;
+  transform: translateY(-1px);
+}
+.addPhotoLable {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 5px;
 }

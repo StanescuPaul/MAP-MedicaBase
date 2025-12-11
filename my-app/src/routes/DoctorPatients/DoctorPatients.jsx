@@ -8,7 +8,10 @@ import styles from "./DoctorPatients.module.css";
 
 export function DoctorPatients() {
   const { idDoctor } = useParams(); //luam din url id-ul doctorului
-  const [doctorName, setDoctorName] = useState("");
+  const [doctorData, setDoctorData] = useState({
+    name: "",
+    imgUrl: "",
+  });
   const [patientsData, setPatientsData] = useState([]); //array gol cu toti pacientii
   const [cnp, setCnp] = useState("");
   const [allert, setAllert] = useState(null);
@@ -40,7 +43,10 @@ export function DoctorPatients() {
 
         const dataDoctor = await responseDoctorData.json();
 
-        setDoctorName(dataDoctor.data.name || dataDoctor.name); //datele schima doctorName
+        setDoctorData({
+          name: dataDoctor.data.name,
+          imgUrl: dataDoctor.data.profileImgUrl,
+        }); //datele schima doctorName
 
         const responsePatientsData = await fetch(
           `http://localhost:5000/doctors/${idDoctor}/patients`
@@ -111,7 +117,11 @@ export function DoctorPatients() {
       <div className={styles.kdoctorLable}>
         <h1 className={styles.textStyle}>MedicaBase</h1>
         <h2 className={styles.textStyle}>User</h2>
-        <KDoctor name={doctorName} onClick={handleOnKDoctor} />
+        <KDoctor
+          name={doctorData.name}
+          imgUrl={doctorData.imgUrl}
+          onClick={handleOnKDoctor}
+        />
       </div>
       <div className={styles.continutDreapta}>
         {isFormOpen && (

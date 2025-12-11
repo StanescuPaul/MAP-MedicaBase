@@ -6,6 +6,7 @@ import "dotenv/config"; //cu noile update-uri in loc de url din schema.prisma
 import multer from "multer"; // librarie pentru gestionare fisiere
 import path from "path"; // pentru a lucra cu cai de fisiere
 import fs from "fs/promises"; // permite lucrarea cu File Sistem-ul serverului (citire/scriere/stergere)
+import bcrypt from "bcrypt"; // librarie pentru hashing parole
 
 const app = express();
 const db = new PrismaClient();
@@ -13,6 +14,7 @@ const port = 5000;
 
 //imi gaseste calea absoluta unde ruleaza serverul (index.js)
 const __dirname = path.resolve();
+const saltRound = 10; //inseamna ca algoritmul bcrypt se executa de 2^10 ori (cu cat e mai mare saltRound cu atat e mai greu de spart parola dar incetineste si serverul avand de facut mai multe calcule)
 
 app.use(cors()); //am nevoie neaparat de asta pentru a putea accesa serverul
 app.use(express.json());
@@ -33,7 +35,8 @@ const storageRule = multer.diskStorage({
     const extension = file.originalname.split(".").pop(); // in extension salvam extensia pozei
 
     const { idDoctor } = req.params;
-
+    //cb este folosit pentru return in modul de lucru asyncron in js
+    //cb este un return succes pentru mod asyncron in js vechi pentru ca multer nu suport functii async si wait cb(null,) inseamna ca nu avem nici o eroare daca vrem sa gestionam erorile le gestionam inainte de acest cb care este ultimul return
     cb(null, `${idDoctor}.${extension}`); //construim numele file-ului poza cu id-ul doctorului si extensia preluata mai sus
   },
 });
@@ -87,6 +90,9 @@ app.post("/doctors/register", async (req, res) => {
       where: { userName: userName },
     });
 
+    //se ia outputul 1 care este rezultat de password + salt unic (generat random) dupa se face pe outputul acela inca o data + salt unic si tot asa de 2^saltRound
+    const hashedPassword = await bcrypt.hash(password, saltRound); // facem hash la parola, bcrypt.hash genereaza aleatoriu un sir de caractere de 16 octeti pe care il combina cu parola si il salveaza in db tot hash-ul
+
     if (doctorUserExist) {
       return sendError(res, "Username is already used", 400); //error are in componenta res,message,status
     }
@@ -103,7 +109,7 @@ app.post("/doctors/register", async (req, res) => {
       data: {
         name: name,
         userName: userName,
-        password: password,
+        password: hashedPassword,
       },
     });
     return sendSucces(
@@ -134,11 +140,14 @@ app.post("/doctors/login", async (req, res) => {
     });
 
     if (!doctor) {
-      return sendError(res, "Invalid password or username", 401);
+      return sendError(res, "Invalid password or username", 400);
     }
 
-    if (doctor.password !== password) {
-      return sendError(res, "Invalid password or username", 401);
+    // aici se trimite parola asociata username-ului si bcrypt.compare stie sa ia din parola has-ul care este stocat in parola hashuita si aplica aceasi regula pe parola de la tastatura introdusa
+    const isPasswordValid = await bcrypt.compare(password, doctor.password);
+
+    if (!isPasswordValid) {
+      return sendError(res, "Invalid password or username", 400);
     }
 
     return sendSucces(

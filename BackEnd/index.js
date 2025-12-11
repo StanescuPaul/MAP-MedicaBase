@@ -29,7 +29,7 @@ const storageRule = multer.diskStorage({
 
   //functia pentru a crea numele fisierului
   filename: (req, file, cb) => {
-    const extension = file.originalname.split(".").pop(); // in extension
+    const extension = file.originalname.split(".").pop(); // in extension salvam extensia pozei
 
     const { idDoctor } = req.params;
 
@@ -40,7 +40,7 @@ const storageRule = multer.diskStorage({
 //in storageRule declaram regulile pentru multer cum sa stocheze si unde sa stocheze imaginea pentru uploar care e obiectul instantat de ibraria multer
 const upload = multer({
   //creez instanta multer care foloseste ce contine storage
-  storage: storageRule,
+  storage: storageRule, //storage este o proprietate pe care o cauta multer cand se ruleaza middleware-ul
 });
 
 //upload e middleware-ul rutei .single accepta doar un singur file cu filedName ul declarat din frontend single este din multer
@@ -49,12 +49,12 @@ app.post(
   upload.single("profilePicture"), //middleware
   async (req, res) => {
     try {
-      const { idDoctor } = use.params;
+      const { idDoctor } = req.params;
 
       if (!req.file) {
         return sendError(res, "No photo was added", 400);
       }
-
+      //toate functiile declarate mai sus sunt folosite doar de multer si salveaza output-ul in obiectul file de aia pot accesa file.filename pentru ca sub capota multer cand a fost apelat middleware-ul a accesat automat functiile din storage urmand sa bage proprietatiile in obiectul file
       const imgUrl = `/uploads/doctors/${req.file.filename}`;
 
       const updateDoctor = await db.doctor.update({

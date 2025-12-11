@@ -224,3 +224,13 @@
   flex-direction: row;
   gap: 5px;
 }
+.alertPhotoStyle {
+  font-size: 15px;
+  margin: 0;
+}
+.success {
+  color: #0dff00;
+}
+.error {
+  color: red;
+}

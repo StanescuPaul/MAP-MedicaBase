@@ -17,6 +17,7 @@ export function KDoctorProfile() {
     patientCount: 0,
   });
   const [profileImage, setProfileImage] = useState(null);
+  const [alertProfilePicture, setAlertProfilePicture] = useState(null);
 
   const fetchDataDoctor = useCallback(async () => {
     try {
@@ -103,14 +104,31 @@ export function KDoctorProfile() {
       const responsePhoto = await rawResponsePhoto.json();
 
       if (rawResponsePhoto.ok) {
-        alert("Upload succesfuly");
+        setAlertProfilePicture({
+          type: responsePhoto.type,
+          message: responsePhoto.data.message,
+        });
       } else {
-        alert("Error uploading");
+        setAlertProfilePicture({
+          type: responsePhoto.type,
+          message: responsePhoto.message,
+        });
       }
     } catch (error) {
       console.log("Error connecting to the server", error);
     }
   };
+
+  useEffect(() => {
+    if (alertProfilePicture) {
+      const timer = setTimeout(() => {
+        setAlertProfilePicture(null);
+      }, 2000);
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [alertProfilePicture]);
 
   return (
     <div className={styles.container}>
@@ -127,6 +145,15 @@ export function KDoctorProfile() {
             +
           </button>
         </div>
+        {alertProfilePicture && (
+          <p
+            className={`${styles.alertPhotoStyle} ${
+              styles[alertProfilePicture.type]
+            }`}
+          >
+            {alertProfilePicture.message}
+          </p>
+        )}
         <div className={styles.dataLable}>
           <div className={styles.dataGroup}>
             <p className={styles.prefixData}>Name:</p>

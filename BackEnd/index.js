@@ -3,8 +3,9 @@ import { PrismaClient } from "@prisma/client";
 import cors from "cors"; // nu mergea conexiunea cu react fara
 import { sendSucces, sendError } from "./helper/response.js"; //am creeat 2 functii separate pentru a fi mai usor de gestionat erorile si succes-urile si pentru a fi mai consistent cu ele si mai usor de comunicat cu forntend-ul
 import "dotenv/config"; //cu noile update-uri in loc de url din schema.prisma
-import multer from "multer"; // pentru gestionare fisiere
+import multer from "multer"; // librarie pentru gestionare fisiere
 import path from "path"; // pentru a lucra cu cai de fisiere
+import fs from "fs/promises"; // permite lucrarea cu File Sistem-ul serverului (citire/scriere/stergere)
 
 const app = express();
 const db = new PrismaClient();
@@ -13,10 +14,10 @@ const port = 5000;
 //imi gaseste calea absoluta unde ruleaza serverul (index.js)
 const __dirname = path.resolve();
 
-app.use(express.static(path.join(__dirname, "public"))); //express.static imi creaza un middleware care permite browser-ului sa acceseze direct directorul cu calea construita in path.join(construieste calea cu separatorul /\ in functie de sistemul de operare)
 app.use(cors()); //am nevoie neaparat de asta pentru a putea accesa serverul
 app.use(express.json());
 
+app.use(express.static(path.join(__dirname, "public"))); //express.static imi creaza un middleware care permite browser-ului sa acceseze direct directorul cu calea construita in path.join(construieste calea cu separatorul /\ in functie de sistemul de operare)
 //in libraria multer, trimitand un fisier prin intermediul multer se creaza un obiect (file) cu anumite proprietati destination(calea destinatie pentru file-ul trimis), filename(numele construit de multer), originalname(numele fisierului original)
 
 //multer.storage spune serverului sa salveze pe hardisk-ul masinii pe care ruleaza serverul poza
@@ -61,7 +62,7 @@ app.post(
         where: { id: idDoctor },
         data: { profileImgUrl: imgUrl },
       });
-
+      //poza se salveaza in server si backend-ul trimite doar url-ul ei din server pentru a fi accesat de frontend ca o poza luata de pe google dar pin url nu descarcata pe masina ta
       return sendSucces(
         res,
         { message: "Profile picture added succesfuly", data: updateDoctor },
@@ -494,9 +495,20 @@ app.delete("/doctors/:idDoctor", async (req, res) => {
       return sendError(res, "The doctor was not found", 404);
     }
 
+    if (doctor.profileImgUrl) {
+      const imgPath = path.join(__dirname, "public", doctor.profileImgUrl); //construim path-ul unde se afla imaginea
+      try {
+        await fs.unlink(imgPath); // cu fs.unlink stergem un fisier din server si se foloseste await pentru (este si o functie asincrona) a face codul sa astepte stergerea daca se poate a fisierului
+      } catch (fsError) {
+        console.log("ERROR on /doctors/:idDoctor DELETE PHOTO", fsError);
+        return sendError("Internal server error", fsError);
+      }
+    }
+
     const deletedDoctor = await db.doctor.delete({
       where: { id: idDoctor }, // onDelete: cascade se ocupa si de restul
     });
+
     return sendSucces(res, deletedDoctor, 200);
   } catch (error) {
     console.log("ERROR on /doctor/:idDoctor DELETE: ", error);

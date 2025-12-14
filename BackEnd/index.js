@@ -22,6 +22,9 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public"))); //express.static imi creaza un middleware care permite browser-ului sa acceseze direct directorul cu calea construita in path.join(construieste calea cu separatorul /\ in functie de sistemul de operare)
 //in libraria multer, trimitand un fisier prin intermediul multer se creaza un obiect (file) cu anumite proprietati destination(calea destinatie pentru file-ul trimis), filename(numele construit de multer), originalname(numele fisierului original)
 
+const STATIC_DIR_FINAL = path.join(__dirname, "BackEnd", "public", "app");
+app.use(express.static(STATIC_DIR_FINAL)); //am nevoie sa imi mai fac o ruta statica pentru rutele * pentru docker
+
 //multer.storage spune serverului sa salveze pe hardisk-ul masinii pe care ruleaza serverul poza
 const storageRule = multer.diskStorage({
   //construim calea destinatie pentru imagine
@@ -239,7 +242,7 @@ app.get("/doctors/:idDoctor", async (req, res) => {
     });
 
     if (!doctor) {
-      sendError(res, "Error finding the doctor", 400);
+      return sendError(res, "Error finding the doctor", 400);
     }
 
     const patientCount = doctor._count ? doctor._count.patients : 0; //daca exista doctor count atunci returnam numarul daca nu 0
@@ -523,6 +526,20 @@ app.delete("/doctors/:idDoctor", async (req, res) => {
     console.log("ERROR on /doctor/:idDoctor DELETE: ", error);
     sendError(res, "Internal server error", 500);
   }
+});
+
+//ruta este ceruta strict pentru fisierul docker
+//ruta pentru a gestiona all-path in caz ca nu se acceseaza o ruta valida de backend sa returneze un fisier din /public/app care este frontendul (sendFile)
+app.get("/", (req, res) => {
+  res.sendFile(
+    path.resolve(__dirname, "BackEnd", "public", "app", "index.html")
+  );
+});
+app.get(/^\/(.*)/, (req, res) => {
+  //.resolve pentru a obtine o cale absoluta
+  res.sendFile(
+    path.resolve(__dirname, "BackEnd", "public", "app", "index.html")
+  );
 });
 
 app.listen(port, () => {

@@ -3,11 +3,12 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets   = ["native", "linux-musl-openssl-3.0.x"] // pentru docker
 }
 
 datasource db {
   provider = "sqlite"
-  //url      = env("DATABASE_URL")//da eroare dar cumva merge 
+  url      = env("DATABASE_URL")//da eroare dar cumva merge 
 }
 
 model Doctor {

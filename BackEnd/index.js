@@ -19,18 +19,19 @@ const saltRound = 10; //inseamna ca algoritmul bcrypt se executa de 2^10 ori (cu
 app.use(cors()); //am nevoie neaparat de asta pentru a putea accesa serverul
 app.use(express.json());
 
+//folosim static pentru a lasa browser-ul sa foloseasca fisiere JS/CSS/File/Image din interiorul back-endului
 app.use(express.static(path.join(__dirname, "public"))); //express.static imi creaza un middleware care permite browser-ului sa acceseze direct directorul cu calea construita in path.join(construieste calea cu separatorul /\ in functie de sistemul de operare)
 //in libraria multer, trimitand un fisier prin intermediul multer se creaza un obiect (file) cu anumite proprietati destination(calea destinatie pentru file-ul trimis), filename(numele construit de multer), originalname(numele fisierului original)
 
-const STATIC_DIR_FINAL = path.join(__dirname, "BackEnd", "public", "app");
-app.use(express.static(STATIC_DIR_FINAL)); //am nevoie sa imi mai fac o ruta statica pentru rutele * pentru docker
+const STATIC_DIR_APP = path.join(__dirname, "BackEnd", "public", "app");
+app.use(express.static(STATIC_DIR_APP)); //am nevoie sa imi mai fac o ruta statica pentru rutele * pentru docker
 
 //multer.storage spune serverului sa salveze pe hardisk-ul masinii pe care ruleaza serverul poza
 const storageRule = multer.diskStorage({
   //construim calea destinatie pentru imagine
   destination: (req, file, cb) => {
     //cb este functia de callback penttru cand e gata actiunea
-    cb(null, path.join(__dirname, "public/uploads/doctors")); //cb returneaza null pentru nici o eroare si dupa returneaza calea destinatie
+    cb(null, path.join(__dirname, "BackEnd", "public", "uploads", "doctors")); //cb returneaza null pentru nici o eroare si dupa returneaza calea destinatie
   },
 
   //functia pentru a crea numele fisierului
@@ -528,18 +529,15 @@ app.delete("/doctors/:idDoctor", async (req, res) => {
   }
 });
 
+app.get("/", (req, res) => {
+  res.sendFile(path.join(STATIC_DIR_APP, "index.html"));
+});
 //ruta este ceruta strict pentru fisierul docker
 //ruta pentru a gestiona all-path in caz ca nu se acceseaza o ruta valida de backend sa returneze un fisier din /public/app care este frontendul (sendFile)
-app.get("/", (req, res) => {
-  res.sendFile(
-    path.resolve(__dirname, "BackEnd", "public", "app", "index.html")
-  );
-});
-app.get(/^\/(.*)/, (req, res) => {
-  //.resolve pentru a obtine o cale absoluta
-  res.sendFile(
-    path.resolve(__dirname, "BackEnd", "public", "app", "index.html")
-  );
+app.get("/*path", (req, res) => {
+  //folosesc regex pentru *
+  // /*path pentru ca din ultimul update regex din express nu poti sa mai dclari rute ambigue cu /* sau * si trebuie sa pun /*path pentru orice alta ruta pe langa cele declarate
+  res.sendFile(path.join(STATIC_DIR_APP, "index.html"));
 });
 
 app.listen(port, () => {

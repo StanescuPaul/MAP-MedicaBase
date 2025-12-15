@@ -10,7 +10,9 @@ import bcrypt from "bcrypt"; // librarie pentru hashing parole
 
 const app = express();
 const db = new PrismaClient();
-const port = 5000;
+const isProduction = process.env.NODE_ENV === "production"; // aici luam variabila de mediu process.env expune toate variabilele de mediu din sis de operare pe care ruleaza node si NODE_ENV este modul din containerul docker(variabila poate avea orice alt nume)
+//environmen variables reprezinta orice variabila care poate afecta modul in care un proces ruleaza
+const port = isProduction ? process.env.PORT_ENV : 5000;
 
 //imi gaseste calea absoluta unde ruleaza serverul (index.js)
 const __dirname = path.resolve();
@@ -23,15 +25,12 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public"))); //express.static imi creaza un middleware care permite browser-ului sa acceseze direct directorul cu calea construita in path.join(construieste calea cu separatorul /\ in functie de sistemul de operare)
 //in libraria multer, trimitand un fisier prin intermediul multer se creaza un obiect (file) cu anumite proprietati destination(calea destinatie pentru file-ul trimis), filename(numele construit de multer), originalname(numele fisierului original)
 
-const STATIC_DIR_APP = path.join(__dirname, "BackEnd", "public", "app");
-app.use(express.static(STATIC_DIR_APP)); //am nevoie sa imi mai fac o ruta statica pentru rutele * pentru docker
-
 //multer.storage spune serverului sa salveze pe hardisk-ul masinii pe care ruleaza serverul poza
 const storageRule = multer.diskStorage({
   //construim calea destinatie pentru imagine
   destination: (req, file, cb) => {
     //cb este functia de callback penttru cand e gata actiunea
-    cb(null, path.join(__dirname, "BackEnd", "public", "uploads", "doctors")); //cb returneaza null pentru nici o eroare si dupa returneaza calea destinatie
+    cb(null, path.join(__dirname, "public", "uploads", "doctors")); //cb returneaza null pentru nici o eroare si dupa returneaza calea destinatie
   },
 
   //functia pentru a crea numele fisierului
@@ -53,7 +52,7 @@ const upload = multer({
 
 //upload e middleware-ul rutei .single accepta doar un singur file cu filedName ul declarat din frontend single este din multer
 app.post(
-  "/doctors/:idDoctor/upload-photo",
+  "/api/doctors/:idDoctor/upload-photo",
   upload.single("profilePicture"), //middleware
   async (req, res) => {
     try {
@@ -82,7 +81,7 @@ app.post(
   }
 );
 
-app.post("/doctors/register", async (req, res) => {
+app.post("/api/doctors/register", async (req, res) => {
   try {
     const { name, userName, password } = req.body;
 
@@ -131,7 +130,7 @@ app.post("/doctors/register", async (req, res) => {
   }
 });
 
-app.post("/doctors/login", async (req, res) => {
+app.post("/api/doctors/login", async (req, res) => {
   try {
     const { userName, password } = req.body;
 
@@ -183,7 +182,7 @@ app.get("/admin/doctors", async (req, res) => {
   }
 });
 
-app.get("/doctors/:idDoctor/patients", async (req, res) => {
+app.get("/api/doctors/:idDoctor/patients", async (req, res) => {
   try {
     const { idDoctor } = req.params;
     const { cnp } = req.query;
@@ -210,7 +209,7 @@ app.get("/doctors/:idDoctor/patients", async (req, res) => {
   }
 });
 
-app.get("/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
+app.get("/api/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
   try {
     const { idPatient } = req.params;
     const patient = await db.patients.findUnique({
@@ -227,7 +226,7 @@ app.get("/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
   }
 });
 
-app.get("/doctors/:idDoctor", async (req, res) => {
+app.get("/api/doctors/:idDoctor", async (req, res) => {
   try {
     const { idDoctor } = req.params;
     const doctor = await db.doctor.findUnique({
@@ -267,7 +266,7 @@ app.get("/doctors/:idDoctor", async (req, res) => {
   }
 });
 
-app.post("/doctors/:idDoctor/patients", async (req, res) => {
+app.post("/api/doctors/:idDoctor/patients", async (req, res) => {
   try {
     const { idDoctor } = req.params;
     const { name, cnp, alergies } = req.body;
@@ -304,7 +303,7 @@ app.post("/doctors/:idDoctor/patients", async (req, res) => {
   }
 });
 
-app.put("/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
+app.put("/api/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
   try {
     const { idPatient } = req.params;
     const { newAlergies, newName, newCnp } = req.body;
@@ -351,7 +350,7 @@ app.put("/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
   }
 });
 
-app.put("/doctors/:idDoctor", async (req, res) => {
+app.put("/api/doctors/:idDoctor", async (req, res) => {
   try {
     const { idDoctor } = req.params;
     const { newUserName, currentPassword, newPassword, newName } = req.body;
@@ -394,7 +393,7 @@ app.put("/doctors/:idDoctor", async (req, res) => {
   }
 });
 
-app.post("/patients/login", async (req, res) => {
+app.post("/api/patients/login", async (req, res) => {
   //aici as schimba functii cand ajung la implementarea ei cu /patients/:idPatients si query pentru nume si cnp
   try {
     const { name, cnp } = req.body;
@@ -436,7 +435,7 @@ app.post("/patients/login", async (req, res) => {
   }
 });
 
-app.get("/patients/:idPatient", async (req, res) => {
+app.get("/api/patients/:idPatient", async (req, res) => {
   try {
     const { idPatient } = req.params;
 
@@ -463,7 +462,7 @@ app.get("/patients/:idPatient", async (req, res) => {
   }
 });
 
-app.delete("/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
+app.delete("/api/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
   try {
     const { idDoctor, idPatient } = req.params;
 
@@ -496,7 +495,7 @@ app.delete("/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
   }
 });
 
-app.delete("/doctors/:idDoctor", async (req, res) => {
+app.delete("/api/doctors/:idDoctor", async (req, res) => {
   try {
     const { idDoctor } = req.params;
 
@@ -529,16 +528,22 @@ app.delete("/doctors/:idDoctor", async (req, res) => {
   }
 });
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(STATIC_DIR_APP, "index.html"));
-});
-//ruta este ceruta strict pentru fisierul docker
-//ruta pentru a gestiona all-path in caz ca nu se acceseaza o ruta valida de backend sa returneze un fisier din /public/app care este frontendul (sendFile)
-app.get("/*path", (req, res) => {
-  //folosesc regex pentru *
-  // /*path pentru ca din ultimul update regex din express nu poti sa mai dclari rute ambigue cu /* sau * si trebuie sa pun /*path pentru orice alta ruta pe langa cele declarate
-  res.sendFile(path.join(STATIC_DIR_APP, "index.html"));
-});
+if (isProduction) {
+  //daca suntem in production adica
+  const STATIC_DIR_APP = path.join(__dirname, "public", "app"); //tine de calea declarata in docker
+  app.use(express.static(STATIC_DIR_APP)); //am nevoie sa imi mai fac o ruta statica pentru rutele * pentru docker
+
+  // app.get("/", (req, res) => {
+  //   res.sendFile(path.join(STATIC_DIR_APP, "index.html"));
+  // });
+  //ruta este ceruta strict pentru fisierul docker
+  //ruta pentru a gestiona all-path in caz ca nu se acceseaza o ruta valida de backend sa returneze un fisier din /public/app care este frontendul (sendFile)
+  app.get("/*path", (req, res) => {
+    //folosesc regex pentru *
+    // /*path pentru ca din ultimul update regex din express nu poti sa mai dclari rute ambigue cu /* sau * si trebuie sa pun /*path pentru orice alta ruta pe langa cele declarate
+    res.sendFile(path.join(STATIC_DIR_APP, "index.html"));
+  });
+}
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}...`);

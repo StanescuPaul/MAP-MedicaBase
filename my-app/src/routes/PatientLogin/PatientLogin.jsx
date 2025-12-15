@@ -26,7 +26,7 @@ export function PatientLogin() {
   const handleOnLogin = async () => {
     try {
       const rawResponseLoginPatient = await fetch(
-        "http://localhost:5000/patients/login",
+        "http://localhost:5000/api/patients/login",
         {
           method: "POST",
           headers: {

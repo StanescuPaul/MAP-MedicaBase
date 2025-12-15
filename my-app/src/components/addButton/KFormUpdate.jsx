@@ -101,7 +101,7 @@ export function KFormUpdate({ close, patient, idDoctor, update }) {
 
     try {
       const rawResponse = await fetch(
-        `http://localhost:5000/doctors/${idDoctor}/patients/${patient.id}`,
+        `http://localhost:5000/api/doctors/${idDoctor}/patients/${patient.id}`,
         {
           method: "PUT",
           headers: {

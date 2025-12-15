@@ -25,13 +25,13 @@ export function DoctorPatient() {
     const data = async () => {
       try {
         const rawResponseDoctorData = await fetch(
-          `http://localhost:5000/doctors/${idDoctor}`
+          `http://localhost:5000/api/doctors/${idDoctor}`
         );
         const responseDoctorData = await rawResponseDoctorData.json();
         setDoctorName(responseDoctorData.data.name || responseDoctorData.name);
 
         const rawResponsePatientData = await fetch(
-          `http://localhost:5000/doctors/${idDoctor}/patients/${idPatient}`
+          `http://localhost:5000/api/doctors/${idDoctor}/patients/${idPatient}`
         );
         const responsePatientData = await rawResponsePatientData.json();
         setPatientData(responsePatientData.data || responsePatientData);
@@ -54,7 +54,7 @@ export function DoctorPatient() {
   const fetchDataPatient = async () => {
     try {
       const rawData = await fetch(
-        `http://localhost:5000/doctors/${idDoctor}/patients/${idPatient}`
+        `http://localhost:5000/api/doctors/${idDoctor}/patients/${idPatient}`
       );
 
       const data = await rawData.json();
@@ -76,7 +76,7 @@ export function DoctorPatient() {
   const handleOnOkDelete = async () => {
     try {
       const rawResponseDelete = await fetch(
-        `http://localhost:5000/doctors/${idDoctor}/patients/${idPatient}`,
+        `http://localhost:5000/api/doctors/${idDoctor}/patients/${idPatient}`,
         {
           method: "DELETE",
           headers: {
@@ -87,7 +87,7 @@ export function DoctorPatient() {
       const responseDelete = await rawResponseDelete.json();
 
       if (rawResponseDelete.ok) {
-        navigate(`http://localhost:3000/doctors/${idDoctor}/patients`);
+        navigate(`/doctors/${idDoctor}/patients`, { replace: true });
         setAlert({
           type: responseDelete.type,
           message: `Patient ${patientData.name} deleted succesfuly`,
@@ -104,7 +104,7 @@ export function DoctorPatient() {
   };
 
   const handleOnKDoctor = () => {
-    navigate(`http://localhost:3000/doctors/${idDoctor}`);
+    navigate(`/doctors/${idDoctor}`, { replace: true });
   };
 
   return (

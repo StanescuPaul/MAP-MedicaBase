@@ -1,6 +1,6 @@
 import styles from "./PatientProfile.module.css";
 import { useState, useEffect } from "react";
-import { replace, useParams } from "react-router";
+import { useParams } from "react-router";
 import { useNavigate } from "react-router";
 
 export function PatientProfile() {
@@ -19,7 +19,7 @@ export function PatientProfile() {
     const dataPatientFetch = async () => {
       try {
         const rawDataPatient = await fetch(
-          `http://localhost:5000/patients/${idPatient}`
+          `http://localhost:5000/api/patients/${idPatient}`
         );
 
         const dataPatient = await rawDataPatient.json();

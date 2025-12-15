@@ -15,13 +15,16 @@ export function DoctorLogin() {
 
   const handleOnLogin = async () => {
     try {
-      const rawResponse = await fetch("http://localhost:5000/doctors/login", {
-        method: "POST", //metoda folosita pe ruta
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form), //modul in care trimitem datele catre server
-      });
+      const rawResponse = await fetch(
+        "http://localhost:5000/api/doctors/login",
+        {
+          method: "POST", //metoda folosita pe ruta
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form), //modul in care trimitem datele catre server
+        }
+      );
       const data = await rawResponse.json(); // asteptarea datelor de la response
 
       if (rawResponse.ok) {

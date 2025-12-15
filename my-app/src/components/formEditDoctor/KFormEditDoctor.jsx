@@ -62,7 +62,7 @@ export function KFormEditDoctor({ close, doctorData, idDoctor, callBack }) {
 
     try {
       const rawResponseUpdate = await fetch(
-        `http://localhost:5000/doctors/${idDoctor}`,
+        `http://localhost:5000/api/doctors/${idDoctor}`,
         {
           method: "PUT",
           headers: {

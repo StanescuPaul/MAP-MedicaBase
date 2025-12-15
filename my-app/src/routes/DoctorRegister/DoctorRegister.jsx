@@ -16,7 +16,7 @@ export function DoctorRegister() {
     try {
       //const rawResponse primste raspunsul de la server dupa ce trimitem datele
       const rawResponse = await fetch(
-        "http://localhost:5000/doctors/register",
+        "http://localhost:5000/api/doctors/register",
         {
           //Ruta unde face actiunile
           method: "POST", //metoda pe care o folosim, GET e default

@@ -76,7 +76,7 @@ export function KForm({ close, idDoctor, onChangeForm }) {
 
     try {
       const rawResponse = await fetch(
-        `http://localhost:5000/doctors/${idDoctor}/patients`,
+        `http://localhost:5000/api/doctors/${idDoctor}/patients`,
         {
           method: "POST",
           headers: {

@@ -5,6 +5,10 @@ import { KButton } from "../../components/button/KButton";
 import { KInput } from "../../components/input/KInput";
 import { useNavigate } from "react-router-dom"; //pentru a putea naviga intr-un if statement
 
+//folosim varaibila de mediu pentru portul pe care o sa faca build frontend-ul pentru a putea folosi orice port mapat dorim
+//Variabilad de mediu ramane nedeclarata pana in momentul in care avem nevoie de ea (lansare finala cu domeniu) asa ca o sa folosim practic un fetch pe "" + /api/doctors/etc astfel orice port pune el o sa ruleze foarte bine iar daca avem nevoie de o cheie publica la un moment dat doar declaram varaibila demediu in fisier
+const API_URL = process.env.REACT_APP_API_URL || "";
+
 export function DoctorLogin() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -15,16 +19,13 @@ export function DoctorLogin() {
 
   const handleOnLogin = async () => {
     try {
-      const rawResponse = await fetch(
-        "http://localhost:5000/api/doctors/login",
-        {
-          method: "POST", //metoda folosita pe ruta
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(form), //modul in care trimitem datele catre server
-        }
-      );
+      const rawResponse = await fetch(`${API_URL}/api/doctors/login`, {
+        method: "POST", //metoda folosita pe ruta
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form), //modul in care trimitem datele catre server
+      });
       const data = await rawResponse.json(); // asteptarea datelor de la response
 
       if (rawResponse.ok) {

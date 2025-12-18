@@ -3,6 +3,7 @@ import { KButton } from "../../components/button/KButton";
 import { KInput } from "../../components/input/KInput";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../config";
 
 export function PatientLogin() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ export function PatientLogin() {
   const handleOnLogin = async () => {
     try {
       const rawResponseLoginPatient = await fetch(
-        "http://localhost:5000/api/patients/login",
+        `${API_URL}/api/patients/login`,
         {
           method: "POST",
           headers: {

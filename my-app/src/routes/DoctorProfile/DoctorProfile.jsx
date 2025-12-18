@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
 import { KFormEditDoctor } from "../../components/formEditDoctor/KFormEditDoctor";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../config";
 
 export function KDoctorProfile() {
   const navigate = useNavigate();
@@ -21,9 +22,7 @@ export function KDoctorProfile() {
 
   const fetchDataDoctor = useCallback(async () => {
     try {
-      const rawDataDotor = await fetch(
-        `http://localhost:5000/api/doctors/${idDoctor}`
-      );
+      const rawDataDotor = await fetch(`${API_URL}/api/doctors/${idDoctor}`);
 
       const dataDoctor = await rawDataDotor.json();
 
@@ -52,7 +51,7 @@ export function KDoctorProfile() {
   const handleOnOkDelete = async () => {
     try {
       const rawResponseDelete = await fetch(
-        `http://localhost:5000/api/doctors/${idDoctor}`,
+        `${API_URL}/api/doctors/${idDoctor}`,
         {
           method: "DELETE",
           headers: {
@@ -94,7 +93,7 @@ export function KDoctorProfile() {
     //cu formData.apend atribui malorii profilePicture din multer valoarea preluata din frontend
     try {
       const rawResponsePhoto = await fetch(
-        `http://localhost:5000/api/doctors/${idDoctor}/upload-photo`,
+        `${API_URL}/api/doctors/${idDoctor}/upload-photo`,
         {
           method: "POST",
           body: formData,

@@ -1,5 +1,6 @@
 import styles from "./KForm.module.css";
 import { useEffect, useState } from "react";
+import { API_URL } from "../../config";
 
 export function KForm({ close, idDoctor, onChangeForm }) {
   const [alert, setAlert] = useState(null);
@@ -76,7 +77,7 @@ export function KForm({ close, idDoctor, onChangeForm }) {
 
     try {
       const rawResponse = await fetch(
-        `http://localhost:5000/api/doctors/${idDoctor}/patients`,
+        `${API_URL}/api/doctors/${idDoctor}/patients`,
         {
           method: "POST",
           headers: {

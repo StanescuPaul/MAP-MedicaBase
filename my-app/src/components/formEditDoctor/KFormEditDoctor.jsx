@@ -1,5 +1,6 @@
 import styles from "./KFormEditDoctor.module.css";
 import { useState, useEffect } from "react";
+import { API_URL } from "../../config";
 
 export function KFormEditDoctor({ close, doctorData, idDoctor, callBack }) {
   const [alert, setAlert] = useState(null);
@@ -62,7 +63,7 @@ export function KFormEditDoctor({ close, doctorData, idDoctor, callBack }) {
 
     try {
       const rawResponseUpdate = await fetch(
-        `http://localhost:5000/api/doctors/${idDoctor}`,
+        `${API_URL}/api/doctors/${idDoctor}`,
         {
           method: "PUT",
           headers: {

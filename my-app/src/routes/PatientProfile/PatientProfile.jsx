@@ -2,6 +2,7 @@ import styles from "./PatientProfile.module.css";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router";
+import { API_URL } from "../../config";
 
 export function PatientProfile() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export function PatientProfile() {
     const dataPatientFetch = async () => {
       try {
         const rawDataPatient = await fetch(
-          `http://localhost:5000/api/patients/${idPatient}`
+          `${API_URL}/api/patients/${idPatient}`
         );
 
         const dataPatient = await rawDataPatient.json();

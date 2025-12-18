@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { KButton } from "../../components/button/KButton";
 import { KInput } from "../../components/input/KInput";
 import styles from "./DoctorRegister.module.css";
+import { API_URL } from "../../config";
 
 export function DoctorRegister() {
   const [form, setForm] = useState({
@@ -15,17 +16,14 @@ export function DoctorRegister() {
   const handleOnSignIn = async () => {
     try {
       //const rawResponse primste raspunsul de la server dupa ce trimitem datele
-      const rawResponse = await fetch(
-        "http://localhost:5000/api/doctors/register",
-        {
-          //Ruta unde face actiunile
-          method: "POST", //metoda pe care o folosim, GET e default
-          headers: {
-            "Content-Type": "application/json", //Anuntam server-ul ca datele sun JSON
-          },
-          body: JSON.stringify(form), //transformam datele in string json si le trimitem
-        }
-      );
+      const rawResponse = await fetch(`${API_URL}/api/doctors/register`, {
+        //Ruta unde face actiunile
+        method: "POST", //metoda pe care o folosim, GET e default
+        headers: {
+          "Content-Type": "application/json", //Anuntam server-ul ca datele sun JSON
+        },
+        body: JSON.stringify(form), //transformam datele in string json si le trimitem
+      });
 
       const data = await rawResponse.json(); //in data preluam raspunsul de la backend format json pentru a putea folosi raspunsul ca pe un obiect ca un plic pe care il deschidem ca la then.then. tot asa.
       //rawResponse e o promisiune deci trebuie await sa asteptam raspunsul

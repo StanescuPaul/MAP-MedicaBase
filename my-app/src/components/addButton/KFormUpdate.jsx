@@ -1,5 +1,6 @@
 import styles from "./KFormUpdate.module.css";
 import { useEffect, useState } from "react";
+import { API_URL } from "../../config";
 
 export function KFormUpdate({ close, patient, idDoctor, update }) {
   const uniqueId = () => Date.now() + Math.random();
@@ -101,7 +102,7 @@ export function KFormUpdate({ close, patient, idDoctor, update }) {
 
     try {
       const rawResponse = await fetch(
-        `http://localhost:5000/api/doctors/${idDoctor}/patients/${patient.id}`,
+        `${API_URL}/api/doctors/${idDoctor}/patients/${patient.id}`,
         {
           method: "PUT",
           headers: {

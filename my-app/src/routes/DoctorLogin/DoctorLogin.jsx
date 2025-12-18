@@ -4,10 +4,10 @@ import { useState } from "react";
 import { KButton } from "../../components/button/KButton";
 import { KInput } from "../../components/input/KInput";
 import { useNavigate } from "react-router-dom"; //pentru a putea naviga intr-un if statement
+import { API_URL } from "../../config";
 
 //folosim varaibila de mediu pentru portul pe care o sa faca build frontend-ul pentru a putea folosi orice port mapat dorim
 //Variabilad de mediu ramane nedeclarata pana in momentul in care avem nevoie de ea (lansare finala cu domeniu) asa ca o sa folosim practic un fetch pe "" + /api/doctors/etc astfel orice port pune el o sa ruleze foarte bine iar daca avem nevoie de o cheie publica la un moment dat doar declaram varaibila demediu in fisier
-const API_URL = process.env.REACT_APP_API_URL || "";
 
 export function DoctorLogin() {
   const navigate = useNavigate();

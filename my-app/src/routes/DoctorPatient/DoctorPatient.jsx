@@ -4,6 +4,7 @@ import { KDoctor } from "../../components/doctorCard/KDoctor";
 import { useParams } from "react-router-dom";
 import { KFormUpdate } from "../../components/addButton/KFormUpdate";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../config";
 
 export function DoctorPatient() {
   const navigate = useNavigate();
@@ -25,13 +26,13 @@ export function DoctorPatient() {
     const data = async () => {
       try {
         const rawResponseDoctorData = await fetch(
-          `http://localhost:5000/api/doctors/${idDoctor}`
+          `${API_URL}/api/doctors/${idDoctor}`
         );
         const responseDoctorData = await rawResponseDoctorData.json();
         setDoctorName(responseDoctorData.data.name || responseDoctorData.name);
 
         const rawResponsePatientData = await fetch(
-          `http://localhost:5000/api/doctors/${idDoctor}/patients/${idPatient}`
+          `${API_URL}/api/doctors/${idDoctor}/patients/${idPatient}`
         );
         const responsePatientData = await rawResponsePatientData.json();
         setPatientData(responsePatientData.data || responsePatientData);
@@ -54,7 +55,7 @@ export function DoctorPatient() {
   const fetchDataPatient = async () => {
     try {
       const rawData = await fetch(
-        `http://localhost:5000/api/doctors/${idDoctor}/patients/${idPatient}`
+        `${API_URL}/api/doctors/${idDoctor}/patients/${idPatient}`
       );
 
       const data = await rawData.json();
@@ -76,7 +77,7 @@ export function DoctorPatient() {
   const handleOnOkDelete = async () => {
     try {
       const rawResponseDelete = await fetch(
-        `http://localhost:5000/api/doctors/${idDoctor}/patients/${idPatient}`,
+        `${API_URL}/api/doctors/${idDoctor}/patients/${idPatient}`,
         {
           method: "DELETE",
           headers: {

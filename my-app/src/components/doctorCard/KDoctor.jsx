@@ -1,8 +1,9 @@
 import styles from "./KDoctor.module.css";
+import { API_URL } from "../../config";
 
 export function KDoctor({ name, onClick, imgUrl }) {
   const finalImage = imgUrl
-    ? `http://localhost:5000/${imgUrl}`
+    ? `${API_URL}/${imgUrl}`
     : require("../../assets/user.png");
   return (
     <button className={styles.container} onClick={onClick}>

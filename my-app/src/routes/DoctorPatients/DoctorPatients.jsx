@@ -5,6 +5,7 @@ import { KPatient } from "../../components/patientCard/KPatient";
 import { KForm } from "../../components/addButton/KForm";
 import { useNavigate } from "react-router-dom";
 import styles from "./DoctorPatients.module.css";
+import { API_URL } from "../../config";
 
 export function DoctorPatients() {
   const { idDoctor } = useParams(); //luam din url id-ul doctorului
@@ -23,7 +24,7 @@ export function DoctorPatients() {
     //functia este creata pentru a putea trimite functia ca prop la KForm ca la finalul adaugarii unui pacient in form sa faca o rerandare a listei de pacienti pentru a se actualiza lista in timp real
     try {
       const rawPatientsData = await fetch(
-        `http://localhost:5000/api/doctors/${idDoctor}/patients`
+        `${API_URL}/api/doctors/${idDoctor}/patients`
       );
 
       const patientsInfo = await rawPatientsData.json();
@@ -38,7 +39,7 @@ export function DoctorPatients() {
       try {
         const responseDoctorData = await fetch(
           //pentru await trebuie sa fiu intr-un async function
-          `http://localhost:5000/api/doctors/${idDoctor}`
+          `${API_URL}/api/doctors/${idDoctor}`
         );
 
         const dataDoctor = await responseDoctorData.json();
@@ -49,7 +50,7 @@ export function DoctorPatients() {
         }); //datele schima doctorName
 
         const responsePatientsData = await fetch(
-          `http://localhost:5000/api/doctors/${idDoctor}/patients`
+          `${API_URL}/api/doctors/${idDoctor}/patients`
         );
         const dataPatients = await responsePatientsData.json();
 
@@ -67,7 +68,7 @@ export function DoctorPatients() {
       if (cnp.length === 13 || cnp === "") {
         //in cazul in care cnp are numarul bun de cifre afisam datele sau daca este 0 afisam toata lista daca nu dam eroarea
         const rawResponse = await fetch(
-          `http://localhost:5000/api/doctors/${idDoctor}/patients?cnp=${cnp}`
+          `${API_URL}/api/doctors/${idDoctor}/patients?cnp=${cnp}`
           //query params nu trebuie introdusi si in backend rout pentru ca sunt operatii facute pe anumite date din backend dar params urile normale definite cu :idCeva trebuie pentru ca acestia dau ierarhia si de unde se iau ce date
         );
 

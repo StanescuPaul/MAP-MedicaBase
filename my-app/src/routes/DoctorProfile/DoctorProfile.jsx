@@ -90,7 +90,7 @@ export function KDoctorProfile() {
   const handleOnAddPhoto = async () => {
     const formData = new FormData(); // pentru fisiere poze etc ai nevoie de FormData pentru tipul de date multipart/form-data
     formData.append("profilePicture", profileImage); //profilePicture trebuie sa fie mesajul din backend din upload.single
-    //cu formData.apend atribui malorii profilePicture din multer valoarea preluata din frontend
+    //cu formData.apend atribui valorii profilePicture din multer valoarea preluata din frontend
     try {
       const rawResponsePhoto = await fetch(
         `${API_URL}/api/doctors/${idDoctor}/upload-photo`,

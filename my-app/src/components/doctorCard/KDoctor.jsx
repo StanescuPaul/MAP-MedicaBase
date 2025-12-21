@@ -3,7 +3,7 @@ import { API_URL } from "../../config";
 
 export function KDoctor({ name, onClick, imgUrl }) {
   const finalImage = imgUrl
-    ? `${API_URL}/${imgUrl}`
+    ? `${API_URL}${imgUrl}`
     : require("../../assets/user.png");
   return (
     <button className={styles.container} onClick={onClick}>
@@ -13,7 +13,6 @@ export function KDoctor({ name, onClick, imgUrl }) {
           <img className={styles.profileImage} src={finalImage} alt="Poza" />
         </div>
         <div className={styles.dataContainer}>
-          {/* <p className={styles.subdataStyle}>nume</p> */}
           <p className={styles.dataStyle}>{name}</p>
         </div>
       </div>

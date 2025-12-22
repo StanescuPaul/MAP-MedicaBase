@@ -2,7 +2,6 @@ import express from "express";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors"; // nu mergea conexiunea cu react fara
 import { sendSucces, sendError } from "./helper/response.js"; //am creeat 2 functii separate pentru a fi mai usor de gestionat erorile si succes-urile si pentru a fi mai consistent cu ele si mai usor de comunicat cu forntend-ul
-import "dotenv/config"; //cu noile update-uri in loc de url din schema.prisma
 import multer from "multer"; // librarie pentru gestionare fisiere
 import path from "path"; // pentru a lucra cu cai de fisiere
 import fs from "fs/promises"; // permite lucrarea cu File Sistem-ul serverului (citire/scriere/stergere)
@@ -12,7 +11,7 @@ const app = express();
 const db = new PrismaClient();
 const isProduction = process.env.NODE_ENV === "production"; // aici luam variabila de mediu process.env expune toate variabilele de mediu din sis de operare pe care ruleaza node si NODE_ENV este modul din containerul docker(variabila poate avea orice alt nume)
 //environmen variables reprezinta orice variabila care poate afecta modul in care un proces ruleaza
-const port = isProduction ? process.env.PORT_ENV : 5000;
+const port = process.env.PORT_ENV;
 
 //imi gaseste calea absoluta unde ruleaza serverul (index.js)
 const __dirname = path.resolve();

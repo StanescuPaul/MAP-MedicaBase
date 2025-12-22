@@ -67,12 +67,12 @@
   background-color: #c4c4c4;
   transform: translateY(-1px);
 }
-.titleStyle {
+.textStyle {
   font-size: 25px;
   color: rgb(0, 0, 0);
   font-weight: 500;
 }
-.titleLable {
+.textLable {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -93,4 +93,9 @@
   padding-right: 20px;
   gap: 10px;
   margin-bottom: 100px;
+}
+.titleStyle {
+  font-size: 40px;
+  position: absolute;
+  top: 150px;
 }

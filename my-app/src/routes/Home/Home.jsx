@@ -10,8 +10,9 @@ export function Home() {
         </Link>
       </div>
       <div className={styles.bottomTab}>
-        <div className={styles.titleLable}>
-          <p className={styles.titleStyle}>
+        <h1 className={styles.titleStyle}>MedicaBase</h1>
+        <div className={styles.textLable}>
+          <p className={styles.textStyle}>
             Create your own medical base to store your patients allergies with
             MedicaBase or see your allergies as a patient.
           </p>

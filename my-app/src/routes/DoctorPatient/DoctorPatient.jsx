@@ -15,7 +15,10 @@ export function DoctorPatient() {
     createAt: "",
     updateAt: "",
   });
-  const [doctorName, setDoctorName] = useState("");
+  const [doctorData, setDoctorData] = useState({
+    name: "",
+    imgUrl: "",
+  });
   const { idDoctor, idPatient } = useParams();
   const [visible, setVisible] = useState(false);
   const [alert, setAlert] = useState(null);
@@ -29,7 +32,10 @@ export function DoctorPatient() {
           `${API_URL}/api/doctors/${idDoctor}`
         );
         const responseDoctorData = await rawResponseDoctorData.json();
-        setDoctorName(responseDoctorData.data.name || responseDoctorData.name);
+        setDoctorData({
+          name: responseDoctorData.data.name,
+          imgUrl: responseDoctorData.data.profileImgUrl,
+        });
 
         const rawResponsePatientData = await fetch(
           `${API_URL}/api/doctors/${idDoctor}/patients/${idPatient}`
@@ -113,7 +119,11 @@ export function DoctorPatient() {
       <div className={styles.doctorView}>
         <h1 className={styles.textStyle}>MedicaBase</h1>
         <h2 className={styles.textStyle}>User</h2>
-        <KDoctor name={doctorName} onClick={handleOnKDoctor} />
+        <KDoctor
+          name={doctorData.name}
+          onClick={handleOnKDoctor}
+          imgUrl={doctorData.imgUrl}
+        />
       </div>
       {visibleDelete && (
         <div className={styles.deleteAskStyle}>

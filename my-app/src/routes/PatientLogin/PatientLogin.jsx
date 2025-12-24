@@ -39,9 +39,8 @@ export function PatientLogin() {
 
       const responseLoginPatient = await rawResponseLoginPatient.json();
 
-      const idPatient = responseLoginPatient.data.patient.id;
-
       if (rawResponseLoginPatient.ok) {
+        const idPatient = responseLoginPatient.data.patient.id;
         setAlert({
           type: responseLoginPatient.type,
           message: "Login succesfully",

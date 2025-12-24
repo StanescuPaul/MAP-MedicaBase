@@ -34,10 +34,14 @@
   font-family: Arial, Helvetica, sans-serif;
   background-color: rgb(164, 208, 206);
   color: rgb(0, 0, 0);
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 100px;
 }
 .buttonRegisterStyle:hover {
   background-color: rgb(132, 165, 163);
   transform: translateY(-1px);
+  color: white;
 }
 .buttonPatientStyle {
   width: 200px;
@@ -47,11 +51,15 @@
   text-align: center;
   font-size: 25px;
   font-family: Arial, Helvetica, sans-serif;
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(164, 208, 206);
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 100px;
 }
 .buttonPatientStyle:hover {
-  background-color: #c4c4c4;
+  background-color: rgb(132, 165, 163);
   transform: translateY(-1px);
+  color: white;
 }
 .buttonLoginStyle {
   width: 100px;
@@ -67,35 +75,60 @@
   background-color: #c4c4c4;
   transform: translateY(-1px);
 }
-.textStyle {
-  font-size: 25px;
-  color: rgb(0, 0, 0);
-  font-weight: 500;
-}
-.textLable {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 900px;
-}
-.buttonLable {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-  width: 400px;
-  height: 100px;
-  border-radius: 20px;
-  border: 1px solid black;
-  box-shadow: 3px 3px 4px #525252;
-  background-color: rgb(87, 110, 109);
-  padding-left: 20px;
-  padding-right: 20px;
-  gap: 10px;
-  margin-bottom: 100px;
-}
 .titleStyle {
   font-size: 40px;
   position: absolute;
   top: 150px;
+}
+.middleLable {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+.doctorSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 300px;
+  height: 400px;
+  flex-direction: column;
+  border-radius: 20px;
+  border: 1px solid black;
+  box-shadow: 3px 6px 10px rgb(84, 84, 84);
+  scale: 1;
+  transition: transform 0.2s ease-out;
+  background-color: rgba(87, 110, 109, 0.2);
+}
+.doctorSection:hover {
+  transform: scale(1.01);
+}
+.doctorTextStyle {
+  font-size: 20px;
+  font-weight: 500;
+  padding: 10px;
+  padding-top: 50px;
+}
+.patientSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 300px;
+  height: 400px;
+  flex-direction: column;
+  border-radius: 20px;
+  border: 1px solid black;
+  box-shadow: 3px 6px 10px rgb(84, 84, 84);
+  scale: 1;
+  transition: transform 0.2s ease-out;
+  background-color: rgba(87, 110, 109, 0.2);
+}
+.patientSection:hover {
+  transform: scale(1.01);
+}
+.patientTextStyle {
+  font-size: 20px;
+  font-weight: 500;
+  padding: 10px;
+  padding-top: 50px;
 }

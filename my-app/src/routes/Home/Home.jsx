@@ -11,21 +11,26 @@ export function Home() {
       </div>
       <div className={styles.bottomTab}>
         <h1 className={styles.titleStyle}>MedicaBase</h1>
-        <div className={styles.textLable}>
-          <p className={styles.textStyle}>
-            Create your own medical base to store your patients allergies with
-            MedicaBase or see your allergies as a patient.
-          </p>
-        </div>
-        <div className={styles.buttonLable}>
-          <Link to="/doctors/register">
-            <button className={styles.buttonRegisterStyle}>
-              Create account
-            </button>
-          </Link>
-          <Link to="/patients/login">
-            <button className={styles.buttonPatientStyle}>Patients</button>
-          </Link>
+        <div className={styles.middleLable}>
+          <div className={styles.doctorSection}>
+            <p className={styles.doctorTextStyle}>
+              Create your own medical base to store information about your
+              patient with MedicaBase.
+            </p>
+            <Link to="/doctors/register">
+              <button className={styles.buttonRegisterStyle}>
+                Create Account
+              </button>
+            </Link>
+          </div>
+          <div className={styles.patientSection}>
+            <p className={styles.patientTextStyle}>
+              View your data asa a patient.
+            </p>
+            <Link to="/patients/login">
+              <button className={styles.buttonPatientStyle}>Patient</button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

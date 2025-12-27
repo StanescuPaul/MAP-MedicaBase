@@ -366,14 +366,20 @@ app.put("/api/doctors/:idDoctor", async (req, res) => {
       updateData.userName = newUserName;
     }
 
+    const isCurrentPasswordValid = await bcrypt.compare(
+      currentPassword,
+      doctorData.password
+    );
+
     if (newPassword) {
       if (newPassword.length < 8) {
         return sendError(res, "Password needs to have at least 8 characters");
       }
-      if (!currentPassword || currentPassword !== doctorData.password) {
+      if (!isCurrentPasswordValid) {
         return sendError(res, "The current password is not correct", 400);
       }
-      updateData.password = newPassword;
+      const hashedNewPassword = await bcrypt.hash(newPassword, saltRound);
+      updateData.password = hashedNewPassword;
     }
 
     if (newName) {
@@ -527,22 +533,23 @@ app.delete("/api/doctors/:idDoctor", async (req, res) => {
   }
 });
 
-if (isProduction) {
-  //daca suntem in production adica
-  const STATIC_DIR_APP = path.join(__dirname, "public", "app"); //tine de calea declarata in docker
-  app.use(express.static(STATIC_DIR_APP)); //am nevoie sa imi mai fac o ruta statica pentru rutele * pentru docker
+//am nevoie de sectiunea asta doar daca folosesc dockerfile si stochez frontend-ul builduit intr-un fisier in backend(sa nu am nevoie de 2 dockerfile pentru fiecare backend/frontend)
+// if (isProduction) {
+//   //daca suntem in production adica
+//   const STATIC_DIR_APP = path.join(__dirname, "public", "app"); //tine de calea declarata in docker
+//   app.use(express.static(STATIC_DIR_APP)); //am nevoie sa imi mai fac o ruta statica pentru rutele * pentru docker
 
-  // app.get("/", (req, res) => {
-  //   res.sendFile(path.join(STATIC_DIR_APP, "index.html"));
-  // });
-  //ruta este ceruta strict pentru fisierul docker
-  //ruta pentru a gestiona all-path in caz ca nu se acceseaza o ruta valida de backend sa returneze un fisier din /public/app care este frontendul (sendFile)
-  app.get("/*path", (req, res) => {
-    //folosesc regex pentru *
-    // /*path pentru ca din ultimul update regex din express nu poti sa mai dclari rute ambigue cu /* sau * si trebuie sa pun /*path pentru orice alta ruta pe langa cele declarate
-    res.sendFile(path.join(STATIC_DIR_APP, "index.html"));
-  });
-}
+//   // app.get("/", (req, res) => {
+//   //   res.sendFile(path.join(STATIC_DIR_APP, "index.html"));
+//   // });
+//   //ruta este ceruta strict pentru fisierul docker
+//   //ruta pentru a gestiona all-path in caz ca nu se acceseaza o ruta valida de backend sa returneze un fisier din /public/app care este frontendul (sendFile)
+//   app.get("/*path", (req, res) => {
+//     //folosesc regex pentru *
+//     // /*path pentru ca din ultimul update regex din express nu poti sa mai dclari rute ambigue cu /* sau * si trebuie sa pun /*path pentru orice alta ruta pe langa cele declarate
+//     res.sendFile(path.join(STATIC_DIR_APP, "index.html"));
+//   });
+// }
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}...`);

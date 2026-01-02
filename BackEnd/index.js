@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, "public"))); //express.static imi cr
 const storageRule = multer.diskStorage({
   //construim calea destinatie pentru imagine
   destination: (req, file, cb) => {
-    //cb este functia de callback penttru cand e gata actiunea
+    //cb este functia de callback pentru cand e gata actiunea
     cb(null, path.join(__dirname, "public", "uploads", "doctors")); //cb returneaza null pentru nici o eroare si dupa returneaza calea destinatie
   },
 
@@ -152,6 +152,13 @@ app.post("/api/doctors/login", async (req, res) => {
       return sendError(res, "Invalid password or username", 400);
     }
 
+    //jwt este format de header(date despre datele folosite si tipul de doken).payload(date despre utilizator).signature(o semnatura secreta pe care doar serverul o stie)
+    const token = jwt.sign(
+      { id: doctor.id, userName: doctor.userName }, //aici se pun informatiile payload din jwt ce are nevoie browserul sa indendifice utilizatorul
+      process.env.JWT_SECRET, //variabila din .env
+      { expiresIn: "2h" }
+    ); // functia jwt.sign foloseste un algoritm matematic pentru a combina datele userului cu JWT_SECRET si cu momentul de timp cand a fost creat token-ul pentru a nu fi acelasi aproape nicioadata pentru a forma tokenul final
+
     return sendSucces(
       res,
       {
@@ -160,7 +167,8 @@ app.post("/api/doctors/login", async (req, res) => {
           id: doctor.id,
           name: doctor.name,
           userName: doctor.userName,
-        }, //creez un obiect manual ca raspuns in care trimit doar datele non-sensibile adica nu trimit si parola
+        }, //creez un obiect manual ca raspuns in care trimit doar datele neimportatnte adica nu trimit si parola
+        token: token,
       },
       200
     );

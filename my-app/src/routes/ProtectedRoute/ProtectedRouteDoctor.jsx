@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 
 export function ProtectedRouteDoctor() {
-  const isAuthentificated = !!localStorage.getItem("sesionDoctorId"); //dubla negatie converteste orice tip de date in valoarea lui booleana
+  const isAuthentificated = !!localStorage.getItem("token"); //dubla negatie converteste orice tip de date in valoarea lui booleana
   //sesionDcotorId vine din login
 
   if (!isAuthentificated) {

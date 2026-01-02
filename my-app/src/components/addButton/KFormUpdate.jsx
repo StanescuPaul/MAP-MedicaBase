@@ -101,12 +101,15 @@ export function KFormUpdate({ close, patient, idDoctor, update }) {
     };
 
     try {
+      const token = localStorage.getItem("token");
+
       const rawResponse = await fetch(
         `${API_URL}/api/doctors/${idDoctor}/patients/${patient.id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(finalForm),
         }

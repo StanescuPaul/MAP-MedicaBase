@@ -62,12 +62,15 @@ export function KFormEditDoctor({ close, doctorData, idDoctor, callBack }) {
     }
 
     try {
+      const token = localStorage.getItem("token");
+
       const rawResponseUpdate = await fetch(
         `${API_URL}/api/doctors/${idDoctor}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(doctorUpdateData),
         }

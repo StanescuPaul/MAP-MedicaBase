@@ -23,8 +23,17 @@ export function DoctorPatients() {
   const fetchPatientsData = async () => {
     //functia este creata pentru a putea trimite functia ca prop la KForm ca la finalul adaugarii unui pacient in form sa faca o rerandare a listei de pacienti pentru a se actualiza lista in timp real
     try {
+      const token = localStorage.getItem("token");
+
       const rawPatientsData = await fetch(
-        `${API_URL}/api/doctors/${idDoctor}/patients`
+        `${API_URL}/api/doctors/${idDoctor}/patients`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       const patientsInfo = await rawPatientsData.json();
@@ -37,9 +46,18 @@ export function DoctorPatients() {
   useEffect(() => {
     const dataDoctor = async () => {
       try {
+        const token = localStorage.getItem("token");
+
         const responseDoctorData = await fetch(
           //pentru await trebuie sa fiu intr-un async function
-          `${API_URL}/api/doctors/${idDoctor}`
+          `${API_URL}/api/doctors/${idDoctor}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
         const dataDoctor = await responseDoctorData.json();
@@ -50,7 +68,14 @@ export function DoctorPatients() {
         }); //datele schima doctorName
 
         const responsePatientsData = await fetch(
-          `${API_URL}/api/doctors/${idDoctor}/patients`
+          `${API_URL}/api/doctors/${idDoctor}/patients`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const dataPatients = await responsePatientsData.json();
 
@@ -63,13 +88,20 @@ export function DoctorPatients() {
   }, [idDoctor]); //luam datele din fetch de fiecare data cand se schimba id-ul doctorului
 
   const handleOnFind = async () => {
+    const token = localStorage.getItem("token");
     //cand se apasa butonul se executa query params cauta si daca este gol inputul returneaza lista initiala
     try {
       if (cnp.length === 13 || cnp === "") {
         //in cazul in care cnp are numarul bun de cifre afisam datele sau daca este 0 afisam toata lista daca nu dam eroarea
         const rawResponse = await fetch(
-          `${API_URL}/api/doctors/${idDoctor}/patients?cnp=${cnp}`
-          //query params nu trebuie introdusi si in backend rout pentru ca sunt operatii facute pe anumite date din backend dar params urile normale definite cu :idCeva trebuie pentru ca acestia dau ierarhia si de unde se iau ce date
+          `${API_URL}/api/doctors/${idDoctor}/patients?cnp=${cnp}`, //query params nu trebuie introdusi si in backend route pentru ca sunt operatii facute pe anumite date din backend dar params urile normale definite cu :idCeva trebuie pentru ca acestia dau ierarhia si de unde se iau ce date
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
         const dataPatient = await rawResponse.json();

@@ -50,12 +50,14 @@ export function KDoctorProfile() {
   };
   const handleOnOkDelete = async () => {
     try {
+      const token = localStorage.getItem("token");
       const rawResponseDelete = await fetch(
         `${API_URL}/api/doctors/${idDoctor}`,
         {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -64,7 +66,7 @@ export function KDoctorProfile() {
 
       if (rawResponseDelete.ok) {
         navigate("/", { replace: true });
-        localStorage.removeItem("sesionDoctorId");
+        localStorage.removeItem("token");
       } else {
         console.log("Error deleting the account");
       }
@@ -83,7 +85,7 @@ export function KDoctorProfile() {
   };
 
   const handleOnLogOut = () => {
-    localStorage.removeItem("sesionDoctorId"); //stergem token-ul din istoricul local
+    localStorage.removeItem("token"); //stergem token-ul din istoricul local
     navigate("/", { replace: true });
   };
 
@@ -92,10 +94,16 @@ export function KDoctorProfile() {
     formData.append("profilePicture", profileImage); //profilePicture trebuie sa fie mesajul din backend din upload.single
     //cu formData.apend atribui valorii profilePicture din multer valoarea preluata din frontend
     try {
+      const token = localStorage.getItem("token");
+
       const rawResponsePhoto = await fetch(
         `${API_URL}/api/doctors/${idDoctor}/upload-photo`,
         {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           body: formData,
         }
       );

@@ -76,12 +76,15 @@ export function KForm({ close, idDoctor, onChangeForm }) {
     };
 
     try {
+      const token = localStorage.getItem("token");
+
       const rawResponse = await fetch(
         `${API_URL}/api/doctors/${idDoctor}/patients`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(finalForm),
         }

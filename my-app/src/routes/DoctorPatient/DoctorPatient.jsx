@@ -60,8 +60,17 @@ export function DoctorPatient() {
   //functie de fetch pentru rerandare
   const fetchDataPatient = async () => {
     try {
+      const token = localStorage.getItem("token"); // luam token-ul din local storage pentru a-l trimite in header
+
       const rawData = await fetch(
-        `${API_URL}/api/doctors/${idDoctor}/patients/${idPatient}`
+        `${API_URL}/api/doctors/${idDoctor}/patients/${idPatient}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, //aici trimitem token-ul in header pentru a-l putea prelua backendul foarte important de incepe cu Bearer si spatiu
+          },
+        }
       );
 
       const data = await rawData.json();
@@ -82,12 +91,15 @@ export function DoctorPatient() {
   //functie pentru a sterge pacient
   const handleOnOkDelete = async () => {
     try {
+      const token = localStorage.getItem("token");
+
       const rawResponseDelete = await fetch(
         `${API_URL}/api/doctors/${idDoctor}/patients/${idPatient}`,
         {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         }
       );

@@ -19,33 +19,39 @@ export function DoctorLogin() {
 
   const handleOnLogin = async () => {
     try {
-      const rawResponse = await fetch(`${API_URL}/api/doctors/login`, {
-        method: "POST", //metoda folosita pe ruta
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form), //modul in care trimitem datele catre server
-      });
-      const data = await rawResponse.json(); // asteptarea datelor de la response
+      const rawResponseDoctorLogin = await fetch(
+        `${API_URL}/api/doctors/login`,
+        {
+          method: "POST", //metoda folosita pe ruta
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form), //modul in care trimitem datele catre server
+        }
+      );
+      const responseDoctorLogin = await rawResponseDoctorLogin.json(); // asteptarea datelor de la response
 
-      if (rawResponse.ok) {
+      if (rawResponseDoctorLogin.ok) {
         setAllert({
-          type: data.type,
+          type: responseDoctorLogin.type,
           message:
-            data.data.message ||
-            data.message ||
+            responseDoctorLogin.data.message ||
+            responseDoctorLogin.message ||
             "Conectare realizata cu succes",
         });
-        const idDoctor = data.data.doctor.id; // luam id din response-ul de la server pentru a-l injecta in url sa accesam doar pacientii acelui doctor, datele se afla in obiectul data din helper acolo e doctor.id
-        navigate(`/doctors/${idDoctor}/patients`, { replace: true }); // folosim navigate in if statement sa ne redirectioneze doar intr-un anumit caz si Link ca sa ne duca un buton pe acea ruta orice ar fi
+        const idDoctor = responseDoctorLogin.data.doctor.id; // luam id din response-ul de la server pentru a-l injecta in url sa accesam doar pacientii acelui doctor, datele se afla in obiectul data din helper acolo e doctor.id
+        navigate(`/doctors/${idDoctor}/patients`); // folosim navigate in if statement sa ne redirectioneze doar intr-un anumit caz si Link ca sa ne duca un buton pe acea ruta orice ar fi
         setForm({
           //replace pentru a inlocui ruta login cu ceea la care navigam sa nu mai avem back button
           userName: "",
           password: "",
         });
-        localStorage.setItem("sesionDoctorId", idDoctor); //folosim token idDoctor
+        localStorage.setItem("token", responseDoctorLogin.data.token); //folosim token jwt
       } else {
-        setAllert({ type: data.type, message: data.message });
+        setAllert({
+          type: responseDoctorLogin.type,
+          message: responseDoctorLogin.message,
+        });
         setForm({
           userName: "",
           password: "",

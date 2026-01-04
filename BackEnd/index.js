@@ -6,6 +6,8 @@ import multer from "multer"; // librarie pentru gestionare fisiere
 import path from "path"; // pentru a lucra cu cai de fisiere
 import fs from "fs/promises"; // permite lucrarea cu File Sistem-ul serverului (citire/scriere/stergere)
 import bcrypt from "bcrypt"; // librarie pentru hashing parole
+import jwt from "jsonwebtoken";
+import { authentificateToken } from "./middleware/authMiddleware.js";
 
 const app = express();
 const db = new PrismaClient();
@@ -52,10 +54,11 @@ const upload = multer({
 //upload e middleware-ul rutei .single accepta doar un singur file cu filedName ul declarat din frontend single este din multer
 app.post(
   "/api/doctors/:idDoctor/upload-photo",
+  authentificateToken,
   upload.single("profilePicture"), //middleware
   async (req, res) => {
     try {
-      const { idDoctor } = req.params;
+      const { idDoctor } = req.user;
 
       if (!req.file) {
         return sendError(res, "No photo was added", 400);
@@ -152,9 +155,15 @@ app.post("/api/doctors/login", async (req, res) => {
       return sendError(res, "Invalid password or username", 400);
     }
 
+    const payload = {
+      idDoctor: doctor.id,
+      role: "Doctor",
+      //userName: doctor.userName, asta este o greseala deoarece in payload-ul care creeaza token-ul ar trebui sa pui doar date statice care nu se pot schimba in timpul sesiunii in care se foloseste token-ul pentru ca token-ul ramane format din datele de dinainte editarii
+    };
+
     //jwt este format de header(date despre datele folosite si tipul de doken).payload(date despre utilizator).signature(o semnatura secreta pe care doar serverul o stie)
     const token = jwt.sign(
-      { id: doctor.id, userName: doctor.userName }, //aici se pun informatiile payload din jwt ce are nevoie browserul sa indendifice utilizatorul
+      payload, //aici se pun informatiile payload din jwt ce are nevoie browserul sa indendifice utilizatorul
       process.env.JWT_SECRET, //variabila din .env
       { expiresIn: "2h" }
     ); // functia jwt.sign foloseste un algoritm matematic pentru a combina datele userului cu JWT_SECRET si cu momentul de timp cand a fost creat token-ul pentru a nu fi acelasi aproape nicioadata pentru a forma tokenul final
@@ -189,58 +198,74 @@ app.get("/admin/doctors", async (req, res) => {
   }
 });
 
-app.get("/api/doctors/:idDoctor/patients", async (req, res) => {
-  try {
-    const { idDoctor } = req.params;
-    const { cnp } = req.query;
+app.get(
+  "/api/doctors/:idDoctor/patients",
+  authentificateToken,
+  async (req, res) => {
+    try {
+      const { idDoctor } = req.user;
+      const { cnp } = req.query;
 
-    let whereCondition = { doctorId: idDoctor }; //aici bagam id doctor la care e pacientul
+      let whereCondition = { doctorId: idDoctor }; //aici bagam id doctor la care e pacientul
 
-    if (cnp) {
-      whereCondition.cnp = cnp; //aici combinam conditiile pentru a face o interogare si pe baza de cnp
+      if (cnp) {
+        whereCondition.cnp = cnp; //aici combinam conditiile pentru a face o interogare si pe baza de cnp
+      }
+
+      const patients = await db.patients.findMany({
+        where: whereCondition,
+        //nu includ si alergiile deoarece aici vreau doar sa primesc pacientii alergiile le am in ruta /:idPatient
+      });
+
+      if (cnp && patients.length === 0) {
+        return sendError(res, `There is no patient with this CNP: ${cnp}`, 404); //in caz ca avem cnp si lista de pacienti e 0 atunci dam eroare pentru ca nu exista pacientul cu acel cnp
+      }
+
+      return sendSucces(res, patients, 200);
+    } catch (error) {
+      console.log("ERROR on /doctors/patients GET: ", error);
+      sendError(res, "Internal server error", 500);
     }
-
-    const patients = await db.patients.findMany({
-      where: whereCondition,
-      //nu includ si alergiile deoarece aici vreau doar sa primesc pacientii alergiile le am in ruta /:idPatient
-    });
-
-    if (cnp && patients.length === 0) {
-      return sendError(res, `There is no patient with this CNP: ${cnp}`, 404); //in caz ca avem cnp si lista de pacienti e 0 atunci dam eroare pentru ca nu exista pacientul cu acel cnp
-    }
-
-    return sendSucces(res, patients, 200);
-  } catch (error) {
-    console.log("ERROR on /doctors/patients GET: ", error);
-    sendError(res, "Internal server error", 500);
   }
-});
+);
 
-app.get("/api/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
-  try {
-    const { idPatient } = req.params;
-    const patient = await db.patients.findUnique({
-      where: { id: idPatient },
-      include: { alergies: true },
-    });
-    if (!patient) {
-      return sendError(res, "The patient was not found", 404);
+app.get(
+  "/api/doctors/:idDoctor/patients/:idPatient",
+  authentificateToken,
+  async (req, res) => {
+    try {
+      const { idDoctor } = req.user;
+      const { idPatient } = req.params;
+
+      const patient = await db.patients.findUnique({
+        where: { id: idPatient },
+        include: { alergies: true },
+      });
+
+      if (!patient) {
+        return sendError(res, "The patient was not found", 404);
+      }
+
+      if (patient.doctorId !== idDoctor) {
+        return sendError(res, "The patient is not from this doctor", 401);
+      }
+
+      return sendSucces(res, patient, 200);
+    } catch (error) {
+      console.log("ERROR on /doctor/patients/:idPatient GET: ", error);
+      sendError(res, "Internal server error", 500);
     }
-    return sendSucces(res, patient, 200);
-  } catch (error) {
-    console.log("ERROR on /doctor/patients/:idPatient GET: ", error);
-    sendError(res, "Internal server error", 500);
   }
-});
+);
 
-app.get("/api/doctors/:idDoctor", async (req, res) => {
+app.get("/api/doctors/:idDoctor", authentificateToken, async (req, res) => {
   try {
-    const { idDoctor } = req.params;
+    const { idDoctor } = req.user;
     const doctor = await db.doctor.findUnique({
       where: { id: idDoctor },
       include: {
         _count: {
-          //variabila numara ce ii ceri sa selecteze in cazul nostru pacientii
+          //variabila _count numara ce ii ceri sa selecteze ,in cazul nostru pacientii
           select: {
             patients: true,
           },
@@ -273,93 +298,104 @@ app.get("/api/doctors/:idDoctor", async (req, res) => {
   }
 });
 
-app.post("/api/doctors/:idDoctor/patients", async (req, res) => {
-  try {
-    const { idDoctor } = req.params;
-    const { name, cnp, alergies } = req.body;
+app.post(
+  "/api/doctors/:idDoctor/patients",
+  authentificateToken,
+  async (req, res) => {
+    try {
+      const { idDoctor } = req.user;
+      const { name, cnp, alergies } = req.body;
 
-    if (!name || !cnp || cnp.length !== 13) {
-      return sendError(
-        res,
-        "The name is required, and the CNP must be 13 digits long",
-        400
-      ); //Verificare input
-    }
-
-    const existent = await db.patients.findUnique({ where: { cnp: cnp } });
-
-    if (existent) {
-      return sendError(res, "The CNP is associated with another name", 400);
-    }
-
-    const patient = await db.patients.create({
-      data: {
-        name: name,
-        cnp: cnp,
-        alergies: {
-          create: alergies.map((alergie) => ({ name: alergie })),
-        },
-        doctor: { connect: { id: idDoctor } }, // conectam datele de mai sus cu doctorul cu id-ul respectiv
-      },
-      include: { alergies: true }, // ca raspunsul pe care il primim sa aiba si alergiile in body
-    });
-    return sendSucces(res, patient, 201);
-  } catch (error) {
-    console.log("ERROR on /doctor/:idDoctor/patients POST: ", error);
-    sendError(res, "Internal server error", 500);
-  }
-});
-
-app.put("/api/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
-  try {
-    const { idPatient } = req.params;
-    const { newAlergies, newName, newCnp } = req.body;
-
-    if (newCnp) {
-      const uniqueCnp = await db.patients.findUnique({
-        where: { cnp: newCnp },
-      });
-      if (uniqueCnp && uniqueCnp.id !== idPatient) {
-        return sendError(res, "There is a patient with this CNP", 400);
+      if (!name || !cnp || cnp.length !== 13) {
+        return sendError(
+          res,
+          "The name is required, and the CNP must be 13 digits long",
+          400
+        ); //Verificare input
       }
+
+      const existent = await db.patients.findUnique({ where: { cnp: cnp } });
+
+      if (existent) {
+        return sendError(res, "The CNP is associated with another name", 400);
+      }
+
+      const patient = await db.patients.create({
+        data: {
+          name: name,
+          cnp: cnp,
+          alergies: {
+            create: alergies.map((alergie) => ({ name: alergie })),
+          },
+          doctor: { connect: { id: idDoctor } }, // conectam datele de mai sus cu doctorul cu id-ul respectiv
+        },
+        include: { alergies: true }, // ca raspunsul pe care il primim sa aiba si alergiile in body
+      });
+      return sendSucces(res, patient, 201);
+    } catch (error) {
+      console.log("ERROR on /doctor/:idDoctor/patients POST: ", error);
+      sendError(res, "Internal server error", 500);
     }
-
-    if (newCnp && newCnp.length !== 13) {
-      return sendError(res, "CNP must contain 13 characters", 400);
-    }
-
-    const allergiesToCreate = newAlergies.map((name) => ({ name: name })); //mapam prin alergiile primite din front-end care este un array pentru a-l convertii in obiect cu proprietatea name: care este formatul acceptat de prisma
-
-    const updateData = {
-      updateAt: new Date(),
-      alergies: {
-        create: allergiesToCreate,
-      },
-    };
-
-    if (newName) {
-      updateData.name = newName;
-    }
-    if (newCnp) {
-      updateData.cnp = newCnp;
-    }
-
-    const patientUpdated = await db.patients.update({
-      where: { id: idPatient },
-      data: updateData,
-      include: { alergies: true },
-    });
-
-    return sendSucces(res, patientUpdated, 200);
-  } catch (error) {
-    console.log("ERROR on /doctor/:idDoctor/patients/:idPatient PUT: ", error);
-    sendError(res, "Internal server error", 500);
   }
-});
+);
 
-app.put("/api/doctors/:idDoctor", async (req, res) => {
+app.put(
+  "/api/doctors/:idDoctor/patients/:idPatient",
+  authentificateToken,
+  async (req, res) => {
+    try {
+      const { idPatient } = req.params;
+      const { newAlergies, newName, newCnp } = req.body;
+
+      if (newCnp) {
+        const uniqueCnp = await db.patients.findUnique({
+          where: { cnp: newCnp },
+        });
+        if (uniqueCnp && uniqueCnp.id !== idPatient) {
+          return sendError(res, "There is a patient with this CNP", 400);
+        }
+      }
+
+      if (newCnp && newCnp.length !== 13) {
+        return sendError(res, "CNP must contain 13 characters", 400);
+      }
+
+      const allergiesToCreate = newAlergies.map((name) => ({ name: name })); //mapam prin alergiile primite din front-end care este un array pentru a-l convertii in obiect cu proprietatea name: care este formatul acceptat de prisma
+
+      const updateData = {
+        updateAt: new Date(),
+        alergies: {
+          create: allergiesToCreate,
+        },
+      };
+
+      if (newName) {
+        updateData.name = newName;
+      }
+      if (newCnp) {
+        updateData.cnp = newCnp;
+      }
+
+      const patientUpdated = await db.patients.update({
+        where: { id: idPatient },
+        data: updateData,
+        include: { alergies: true },
+      });
+
+      return sendSucces(res, patientUpdated, 200);
+    } catch (error) {
+      console.log(
+        "ERROR on /doctor/:idDoctor/patients/:idPatient PUT: ",
+        error
+      );
+      sendError(res, "Internal server error", 500);
+    }
+  }
+);
+
+app.put("/api/doctors/:idDoctor", authentificateToken, async (req, res) => {
   try {
-    const { idDoctor } = req.params;
+    const { idDoctor } = req.user;
     const { newUserName, currentPassword, newPassword, newName } = req.body;
 
     if (!newUserName && !newName && !newPassword) {
@@ -374,12 +410,11 @@ app.put("/api/doctors/:idDoctor", async (req, res) => {
       updateData.userName = newUserName;
     }
 
-    const isCurrentPasswordValid = await bcrypt.compare(
-      currentPassword,
-      doctorData.password
-    );
-
     if (newPassword) {
+      const isCurrentPasswordValid = await bcrypt.compare(
+        currentPassword,
+        doctorData.password
+      );
       if (newPassword.length < 8) {
         return sendError(res, "Password needs to have at least 8 characters");
       }
@@ -475,42 +510,47 @@ app.get("/api/patients/:idPatient", async (req, res) => {
   }
 });
 
-app.delete("/api/doctors/:idDoctor/patients/:idPatient", async (req, res) => {
-  try {
-    const { idDoctor, idPatient } = req.params;
+app.delete(
+  "/api/doctors/:idDoctor/patients/:idPatient",
+  authentificateToken,
+  async (req, res) => {
+    try {
+      const { idDoctor } = req.user;
+      const { idPatient } = req.params;
 
-    const patient = await db.patients.findUnique({
-      where: { id: idPatient },
-    });
+      const patient = await db.patients.findUnique({
+        where: { id: idPatient },
+      });
 
-    if (!patient) {
-      return sendError(res, "The patient does not exist", 404);
-    }
+      if (!patient) {
+        return sendError(res, "The patient does not exist", 404);
+      }
 
-    if (patient.doctorId !== idDoctor) {
-      return sendError(
-        res,
-        "The patient does not belong to this doctor, therefore cannot be deleted",
-        400
+      if (patient.doctorId !== idDoctor) {
+        return sendError(
+          res,
+          "The patient does not belong to this doctor, therefore cannot be deleted",
+          400
+        );
+      }
+
+      const deletedPatient = await db.patients.delete({
+        where: { id: idPatient },
+      });
+      return sendSucces(res, { deletedPatient }, 200);
+    } catch (error) {
+      console.log(
+        "ERROR on /doctor/:idDoctor/patients/:idPatient DELETE: ",
+        error
       );
+      sendError(res, "Internal server error", 500);
     }
-
-    const deletedPatient = await db.patients.delete({
-      where: { id: idPatient },
-    });
-    return sendSucces(res, { deletedPatient }, 200);
-  } catch (error) {
-    console.log(
-      "ERROR on /doctor/:idDoctor/patients/:idPatient DELETE: ",
-      error
-    );
-    sendError(res, "Internal server error", 500);
   }
-});
+);
 
-app.delete("/api/doctors/:idDoctor", async (req, res) => {
+app.delete("/api/doctors/:idDoctor", authentificateToken, async (req, res) => {
   try {
-    const { idDoctor } = req.params;
+    const { idDoctor } = req.user;
 
     const doctor = await db.doctor.findUnique({
       where: { id: idDoctor },

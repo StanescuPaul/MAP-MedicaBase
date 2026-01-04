@@ -21,8 +21,15 @@ export function KDoctorProfile() {
   const [alertProfilePicture, setAlertProfilePicture] = useState(null);
 
   const fetchDataDoctor = useCallback(async () => {
+    const token = localStorage.getItem("token");
     try {
-      const rawDataDotor = await fetch(`${API_URL}/api/doctors/${idDoctor}`);
+      const rawDataDotor = await fetch(`${API_URL}/api/doctors/${idDoctor}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       const dataDoctor = await rawDataDotor.json();
 
@@ -101,7 +108,7 @@ export function KDoctorProfile() {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
+            //"Content-Type": "application/json", este o greseala deoarece nu trimit json trebuie sa las browserul sa isi trimita content type-ul
             Authorization: `Bearer ${token}`,
           },
           body: formData,

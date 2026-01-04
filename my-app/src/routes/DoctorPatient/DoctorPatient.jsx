@@ -27,9 +27,18 @@ export function DoctorPatient() {
   //fetch date doctor si pacient
   useEffect(() => {
     const data = async () => {
+      const token = localStorage.getItem("token");
+
       try {
         const rawResponseDoctorData = await fetch(
-          `${API_URL}/api/doctors/${idDoctor}`
+          `${API_URL}/api/doctors/${idDoctor}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const responseDoctorData = await rawResponseDoctorData.json();
         setDoctorData({
@@ -38,10 +47,25 @@ export function DoctorPatient() {
         });
 
         const rawResponsePatientData = await fetch(
-          `${API_URL}/api/doctors/${idDoctor}/patients/${idPatient}`
+          `${API_URL}/api/doctors/${idDoctor}/patients/${idPatient}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const responsePatientData = await rawResponsePatientData.json();
-        setPatientData(responsePatientData.data || responsePatientData);
+
+        if (rawResponsePatientData.ok) {
+          setPatientData(responsePatientData.data || responsePatientData);
+        } else {
+          setAlert({
+            type: responsePatientData.type,
+            message: responsePatientData.message,
+          });
+        }
       } catch (err) {
         console.log("Eroare la conectare la serve!!!");
       }

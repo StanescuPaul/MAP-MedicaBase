@@ -74,13 +74,13 @@ app.post(
       return sendSucces(
         res,
         { message: "Profile picture added succesfuly", data: updateDoctor },
-        200
+        200,
       );
     } catch (err) {
       console.log("ERROR on /doctors/:idDoctor/upload-photo POST ", err);
       sendError(res, "Internal server error", 500);
     }
-  }
+  },
 );
 
 app.post("/api/doctors/register", async (req, res) => {
@@ -106,7 +106,7 @@ app.post("/api/doctors/register", async (req, res) => {
       return sendError(
         res,
         "The password must contain at least 8 characters",
-        400
+        400,
       );
     }
 
@@ -124,7 +124,7 @@ app.post("/api/doctors/register", async (req, res) => {
         message: "Account successfully created",
         doctor,
       },
-      201
+      201,
     );
   } catch (error) {
     console.log("ERROR on /doctor/register POST: ", error);
@@ -165,7 +165,7 @@ app.post("/api/doctors/login", async (req, res) => {
     const token = jwt.sign(
       payload, //aici se pun informatiile payload din jwt ce are nevoie browserul sa indendifice utilizatorul
       process.env.JWT_SECRET, //variabila din .env
-      { expiresIn: "2h" }
+      { expiresIn: "2h" },
     ); // functia jwt.sign foloseste un algoritm matematic pentru a combina datele userului cu JWT_SECRET si cu momentul de timp cand a fost creat token-ul pentru a nu fi acelasi aproape nicioadata pentru a forma tokenul final
 
     return sendSucces(
@@ -179,7 +179,7 @@ app.post("/api/doctors/login", async (req, res) => {
         }, //creez un obiect manual ca raspuns in care trimit doar datele neimportatnte adica nu trimit si parola
         token: token,
       },
-      200
+      200,
     );
   } catch (error) {
     console.log("ERROR on /doctor/login POST: ", error);
@@ -226,7 +226,7 @@ app.get(
       console.log("ERROR on /doctors/patients GET: ", error);
       sendError(res, "Internal server error", 500);
     }
-  }
+  },
 );
 
 app.get(
@@ -255,7 +255,7 @@ app.get(
       console.log("ERROR on /doctor/patients/:idPatient GET: ", error);
       sendError(res, "Internal server error", 500);
     }
-  }
+  },
 );
 
 app.get("/api/doctors/:idDoctor", authentificateToken, async (req, res) => {
@@ -290,7 +290,7 @@ app.get("/api/doctors/:idDoctor", authentificateToken, async (req, res) => {
         patientCount: patientCount,
         profileImgUrl: doctor.profileImgUrl,
       },
-      200
+      200,
     );
   } catch (error) {
     console.log("ERROR on /doctors/:idDoctor GET: ", error);
@@ -310,7 +310,7 @@ app.post(
         return sendError(
           res,
           "The name is required, and the CNP must be 13 digits long",
-          400
+          400,
         ); //Verificare input
       }
 
@@ -336,7 +336,7 @@ app.post(
       console.log("ERROR on /doctor/:idDoctor/patients POST: ", error);
       sendError(res, "Internal server error", 500);
     }
-  }
+  },
 );
 
 app.put(
@@ -386,11 +386,11 @@ app.put(
     } catch (error) {
       console.log(
         "ERROR on /doctor/:idDoctor/patients/:idPatient PUT: ",
-        error
+        error,
       );
       sendError(res, "Internal server error", 500);
     }
-  }
+  },
 );
 
 app.put("/api/doctors/:idDoctor", authentificateToken, async (req, res) => {
@@ -413,7 +413,7 @@ app.put("/api/doctors/:idDoctor", authentificateToken, async (req, res) => {
     if (newPassword) {
       const isCurrentPasswordValid = await bcrypt.compare(
         currentPassword,
-        doctorData.password
+        doctorData.password,
       );
       if (newPassword.length < 8) {
         return sendError(res, "Password needs to have at least 8 characters");
@@ -475,7 +475,7 @@ app.post("/api/patients/login", async (req, res) => {
           cnp: cnp, // nu vreau sa returnez si idDoctor motive de securitate asa ca creez eu un obiect personalizat cu datele pe care le vreau
         },
       },
-      200
+      200,
     );
   } catch (error) {
     console.log("ERROR on /patients/login POST", error);
@@ -530,7 +530,7 @@ app.delete(
         return sendError(
           res,
           "The patient does not belong to this doctor, therefore cannot be deleted",
-          400
+          400,
         );
       }
 
@@ -541,11 +541,11 @@ app.delete(
     } catch (error) {
       console.log(
         "ERROR on /doctor/:idDoctor/patients/:idPatient DELETE: ",
-        error
+        error,
       );
       sendError(res, "Internal server error", 500);
     }
-  }
+  },
 );
 
 app.delete("/api/doctors/:idDoctor", authentificateToken, async (req, res) => {

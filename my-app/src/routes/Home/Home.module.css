@@ -77,8 +77,6 @@
 }
 .titleStyle {
   font-size: 40px;
-  position: absolute;
-  top: 150px;
 }
 .middleLable {
   display: flex;
